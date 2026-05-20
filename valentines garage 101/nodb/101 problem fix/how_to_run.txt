@@ -1,0 +1,256 @@
+================================================================================
+        VALENTINE'S GARAGE APP — SETUP & RUN GUIDE (Android Studio)
+================================================================================
+ 
+WHAT YOU NEED BEFORE YOU START
+────────────────────────────────────────────────────────────────────────────────
+  - A Windows, Mac, or Linux computer
+  - Internet connection (for downloading Android Studio and dependencies)
+  - At least 8 GB RAM recommended
+  - At least 10 GB free disk space
+
+================================================================================
+STEP 1 — EXTRACT THE PROJECT FILES
+================================================================================
+ 
+  1. Find the file:  ValentinesGarage.zip
+  
+ 
+  2. Right-click it → "Extract All..." (Windows)
+     OR double-click and drag the folder out (Mac)
+ 
+  3. Extract it to a simple location, for example:
+       Windows:  C:\Projects\ValentinesGarage
+       Mac/Linux: ~/Projects/ValentinesGarage
+ 
+     IMPORTANT: Avoid paths with spaces or special characters.
+     BAD  example:  C:\Users\John Smith\My Projects\ValentinesGarage
+     GOOD example:  C:\Projects\ValentinesGarage
+ 
+  4. After extracting you should see a folder called "ValentinesGarage"
+     containing these items:
+       - app/
+       - gradle/
+       - build.gradle.kts
+       - settings.gradle.kts
+       - gradle.properties
+       - README.md
+ 
+ 
+================================================================================
+STEP 2 — OPEN THE PROJECT IN ANDROID STUDIO
+================================================================================
+ 
+  1. Open Android Studio.
+ 
+  2. On the Welcome screen, click "Open" (NOT "New Project").
+ 
+  3. In the file browser that opens, navigate to your extracted folder.
+     Click on the "ValentinesGarage" FOLDER (not any file inside it).
+ 
+  4. Click OK / Open.
+ 
+  5. If asked "Trust this project?" — click "Trust Project".
+ 
+  6. Android Studio will now open the project and start GRADLE SYNC automatically.
+     You will see a progress bar at the bottom of the screen.
+ 
+     GRADLE SYNC downloads all the libraries the app needs (Room, Hilt, Compose,
+     etc.). This requires internet and takes 5–15 minutes the FIRST time.
+ 
+  7. Wait until you see this message at the bottom:
+       "Gradle sync finished"
+ 
+     If you see any errors during sync, see the TROUBLESHOOTING section below.
+ 
+ 
+================================================================================
+STEP 3 — CREATE AN ANDROID EMULATOR (Virtual Device)
+================================================================================
+ 
+  You need a virtual phone to run the app on your computer.
+ 
+  1. In Android Studio, click the top menu:
+       Tools → Device Manager
+ 
+  2. In the Device Manager panel that opens on the right, click:
+       "Create Device"  (or the "+" button)
+ 
+  3. Select a phone model:
+       - Choose "Phone" category on the left
+       - Select "Pixel 6" from the list
+       - Click Next
+ 
+  4. Select a system image (Android version):
+       - Click on the "Recommended" tab
+       - Look for "API 34" (Android 14)
+       - If there is a "Download" link next to it, click Download and wait
+       - Once downloaded, select it and click Next
+ 
+  5. On the final screen, leave the name as-is and click Finish.
+ 
+  6. Your emulator now appears in the Device Manager list.
+     Click the ▶ (Play) button next to it to start it.
+ 
+     The emulator window will open — it looks like a phone on your screen.
+     Wait until the Android home screen fully loads (1–3 minutes first time).
+ 
+ 
+================================================================================
+STEP 4 — BUILD & RUN THE APP
+================================================================================
+ 
+  1. Make sure your emulator is running and showing the Android home screen.
+ 
+  2. In the Android Studio toolbar at the top, check the dropdown next to
+     the ▶ button — it should show your emulator name (e.g. "Pixel 6 API 34").
+     If it shows something else, click the dropdown and select your emulator.
+ 
+  3. Click the GREEN TRIANGLE ▶ "Run 'app'" button in the toolbar.
+     (Keyboard shortcut: Shift + F10 on Windows, Ctrl + R on Mac)
+ 
+  4. Android Studio will:
+       a. Compile all the code  (~1–3 minutes first time)
+       b. Install the app on the emulator
+       c. Launch the app automatically
+ 
+  5. The app will open on the emulator showing the Dashboard screen.
+ 
+ 
+================================================================================
+STEP 5 — USING THE APP
+================================================================================
+ 
+  The app has 5 screens accessible from the bottom navigation bar:
+ 
+  DASHBOARD
+  ─────────
+  Shows a summary of all checked-in vehicles, how many are active,
+  completed, and their task progress.
+ 
+  TRUCK CHECK-IN  (this is where you start)
+  ─────────────
+  Fill in the form to register a truck arriving for repairs:
+    - Registration Number (e.g. N 1234 WH)
+    - Make & Model (e.g. Volvo FH16)
+    - Odometer reading in km
+    - Driver name
+    - Vehicle Condition — select Good, Fair, or Critical
+    - Condition Notes — describe any visible damage or faults
+    - Assign a Lead Mechanic from the dropdown
+    - Set Priority (Normal / High / Urgent)
+  Tap "Complete Check-In" to save the vehicle.
+  A standard service checklist is automatically created for each vehicle.
+ 
+  SERVICE BOARD
+  ─────────────
+  Shows all active vehicles and their service checklists.
+  Mechanics tap the checkbox next to a task to complete it.
+  A dialog will ask: which mechanic did this, and what notes to add.
+  This prevents tasks from being missed or duplicated between mechanics.
+  When ALL tasks on a vehicle are ticked, a "Mark Complete" button appears.
+ 
+  REPORTS  (Valentine's management view)
+  ───────
+  Tab 1 - Employee Activity:
+    Shows how many tasks each mechanic completed and on how many vehicles.
+  Tab 2 - Vehicle Log:
+    Shows every vehicle's condition and odometer reading at check-in,
+    along with current status and task progress.
+ 
+  EMPLOYEES
+  ─────────
+  Lists all 6 staff members that are pre-loaded when the app first starts:
+    - Valentine Mutorwa   (Manager)
+    - Johannes Kavendjii  (Lead Mechanic)
+    - Petrus Nangolo      (Senior Mechanic)
+    - Maria Shikongo      (Senior Mechanic)
+    - Festus Haimbodi     (Junior Mechanic)
+    - Absalom Tjiueza     (Junior Mechanic)
+ 
+ 
+================================================================================
+STEP 6 — RUNNING THE UNIT TESTS (optional, for marking)
+================================================================================
+ 
+  1. In the Project panel on the left, expand:
+       app → src → test → java → com.valentinesgarage
+ 
+  2. Right-click the "valentinesgarage" folder.
+ 
+  3. Click "Run 'Tests in valentinesgarage'"
+ 
+  4. The Run panel at the bottom will show all 11 tests passing with green ticks.
+ 
+  Tests cover:
+    - Odometer input validation (zero, negative, blank, non-numeric)
+    - Registration number validation
+    - Condition notes requirement for Critical vehicles
+    - Employee report percentage calculations
+ 
+ 
+================================================================================
+TROUBLESHOOTING
+================================================================================
+ 
+  PROBLEM: Gradle sync fails with "Could not resolve..." errors
+  SOLUTION: Check your internet connection. Then go to:
+            File → Sync Project with Gradle Files
+            Try again. It may need 2–3 attempts if your connection is slow.
+ 
+  ─────────────────────────────────────────────────────────────────────────────
+ 
+  PROBLEM: "SDK location not found" error
+  SOLUTION: Go to File → Project Structure → SDK Location
+            Set "Android SDK location" to the path where Android Studio
+            installed the SDK. Usually:
+              Windows: C:\Users\YourName\AppData\Local\Android\Sdk
+              Mac:     /Users/YourName/Library/Android/sdk
+ 
+  ─────────────────────────────────────────────────────────────────────────────
+ 
+  PROBLEM: Emulator is very slow or won't start
+  SOLUTION: - Make sure Intel HAXM is installed (Windows/Mac Intel only).
+              Go to SDK Manager → SDK Tools → check "Intel HAXM" → Apply.
+            - If on AMD CPU on Windows, enable "Android Emulator Hypervisor
+              Driver for AMD Processors" in SDK Tools instead.
+            - Alternatively, plug in a real Android phone via USB,
+              enable "Developer Options" and "USB Debugging" on the phone,
+              and it will appear as a device option in Android Studio.
+ 
+  ─────────────────────────────────────────────────────────────────────────────
+ 
+  PROBLEM: "JDK not configured" or Java errors
+  SOLUTION: Go to File → Project Structure → SDK Location → JDK Location
+            Set it to the JDK bundled with Android Studio:
+              Windows: C:\Program Files\Android\Android Studio\jbr
+              Mac:     /Applications/Android Studio.app/Contents/jbr
+ 
+  ─────────────────────────────────────────────────────────────────────────────
+ 
+  PROBLEM: App crashes immediately on launch
+  SOLUTION: Go to View → Tool Windows → Logcat
+            Look for red error lines. Take a screenshot and share with
+            your lecturer or group member for help.
+ 
+  ─────────────────────────────────────────────────────────────────────────────
+ 
+  PROBLEM: Build fails with "Daemon is stopping / JVM GC thrashing"
+  SOLUTION: This is already fixed in gradle.properties, but if it persists:
+            Open the file:  ValentinesGarage/gradle.properties
+            Make sure this line is present:
+              org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+            Save the file and re-sync Gradle.
+ 
+ 
+================================================================================
+QUICK REFERENCE — KEYBOARD SHORTCUTS
+================================================================================
+ 
+  Run app               Shift + F10  (Windows)   /  Ctrl + R  (Mac)
+  Sync Gradle           (click the elephant icon in toolbar)
+  Open Terminal         Alt + F12    (Windows)   /  Alt + F12 (Mac)
+  Open Logcat           Alt + 6      (Windows)   /  Cmd + 6   (Mac)
+  Search everywhere     Double-tap Shift
+ 
+ 
