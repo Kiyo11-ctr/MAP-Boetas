@@ -11,6 +11,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.*
+import com.valentinesgarage.R
+import com.valentinesgarage.data.model.UserRole
 import com.valentinesgarage.ui.auth.AuthViewModel
 import com.valentinesgarage.ui.auth.LoginScreen
 import com.valentinesgarage.ui.auth.SignUpScreen
@@ -19,23 +21,15 @@ import com.valentinesgarage.ui.auth.SignUpScreen
  * Navigation destinations for the app.
  * Using sealed class to make routes type-safe — prevents typo bugs.
  */
-sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
-    object Login       : Screen("login",      "Login",      Icons.Default.Login)
-    object SignUp      : Screen("signup",     "Sign Up",     Icons.Default.PersonAdd)
-    object Dashboard   : Screen("dashboard",  "Dashboard",  Icons.Default.Dashboard)
-    object CheckIn     : Screen("checkin",    "Check-In",   Icons.Default.LocalShipping)
-    object ServiceBoard: Screen("service",    "Service",    Icons.Default.Checklist)
-    object Reports     : Screen("reports",    "Reports",    Icons.Default.BarChart)
-    object Employees   : Screen("employees",  "Employees",  Icons.Default.People)
+sealed class Screen(val route: String, val label: String, val icon: ImageVector, val roles: List<UserRole>) {
+    object Login       : Screen("login",      "Login",      Icons.Default.Login, UserRole.entries)
+    object SignUp      : Screen("signup",     "Sign Up",     Icons.Default.PersonAdd, UserRole.entries)
+    object Dashboard   : Screen("dashboard",  "Dashboard",  Icons.Default.Dashboard, listOf(UserRole.ADMIN, UserRole.RECEPTIONIST))
+    object CheckIn     : Screen("checkin",    "Check-In",   Icons.Default.LocalShipping, listOf(UserRole.ADMIN, UserRole.RECEPTIONIST))
+    object ServiceBoard: Screen("service",    "Service",    Icons.Default.Checklist, listOf(UserRole.ADMIN, UserRole.MECHANIC))
+    object Reports     : Screen("reports",    "Reports",    Icons.Default.BarChart, listOf(UserRole.ADMIN))
+    object Employees   : Screen("employees",  "Employees",  Icons.Default.People, listOf(UserRole.ADMIN))
 }
-
-val bottomNavItems = listOf(
-    Screen.Dashboard,
-    Screen.CheckIn,
-    Screen.ServiceBoard,
-    Screen.Reports,
-    Screen.Employees
-)
 
 /**
  * Root composable that owns the NavController and renders the
@@ -45,6 +39,18 @@ val bottomNavItems = listOf(
 fun GarageNavHost(authViewModel: AuthViewModel = hiltViewModel()) {
     val navController = rememberNavController()
     val authState by authViewModel.uiState.collectAsState()
+
+    val currentRole = authState.currentUser?.role ?: UserRole.MECHANIC
+
+    val filteredNavItems = remember(currentRole) {
+        listOf(
+            Screen.Dashboard,
+            Screen.CheckIn,
+            Screen.ServiceBoard,
+            Screen.Reports,
+            Screen.Employees
+        ).filter { it.roles.contains(currentRole) }
+    }
 
     val showBottomBar = authState.isAuthenticated &&
             listOf(Screen.Dashboard.route, Screen.CheckIn.route, Screen.ServiceBoard.route, Screen.Reports.route, Screen.Employees.route)
@@ -56,7 +62,7 @@ fun GarageNavHost(authViewModel: AuthViewModel = hiltViewModel()) {
                 NavigationBar {
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentDestination = navBackStackEntry?.destination
-                    bottomNavItems.forEach { screen ->
+                    filteredNavItems.forEach { screen ->
                         NavigationBarItem(
                             icon = { Icon(screen.icon, contentDescription = screen.label) },
                             label = { Text(screen.label) },
