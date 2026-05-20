@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base theme used by the Compose activity. Material3 dynamic color handles the rest. -->
+    <style name="Theme.ValentinesGarage" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/garage_navy</item>
+    </style>
+</resources>
