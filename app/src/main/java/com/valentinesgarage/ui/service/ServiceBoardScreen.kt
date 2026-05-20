@@ -45,18 +45,34 @@ fun ServiceBoardScreen(viewModel: ServiceViewModel = hiltViewModel()) {
         }
     ) { padding ->
         if (state.isLoading) { LoadingScreen(); return@Scaffold }
-        if (state.vehiclesWithTasks.isEmpty()) {
-            EmptyState(stringResource(R.string.empty_service_board), Modifier.padding(padding))
-            return@Scaffold
-        }
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding),
-            contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp)
-        ) {
-            items(state.vehiclesWithTasks) { vt ->
-                VehicleTaskCard(vt, state.mechanics, viewModel)
+        Column(modifier = Modifier.padding(padding)) {
+            OutlinedTextField(
+                value = state.searchQuery,
+                onValueChange = viewModel::onSearchQueryChanged,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                placeholder = { Text("Search registration or model...") },
+                leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+                singleLine = true,
+                shape = MaterialTheme.shapes.medium
+            )
+
+            if (state.vehiclesWithTasks.isEmpty()) {
+                EmptyState(stringResource(R.string.empty_service_board), Modifier.fillMaxSize())
+            } else if (state.filteredVehicles.isEmpty()) {
+                EmptyState("No vehicles match your search.", Modifier.fillMaxSize())
+            } else {
+                LazyColumn(
+                    contentPadding = PaddingValues(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(state.filteredVehicles) { vt ->
+                        VehicleTaskCard(vt, state.mechanics, viewModel)
+                    }
+                }
             }
         }
     }
@@ -71,6 +87,7 @@ private fun VehicleTaskCard(
     val done = vt.tasks.count { it.isCompleted }
     var showCompleteTaskDialog by remember { mutableStateOf<ServiceTask?>(null) }
     var showAddTaskDialog by remember { mutableStateOf(false) }
+    var showCompleteVehicleDialog by remember { mutableStateOf(false) }
 
     Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(1.dp)) {
         Column(Modifier.padding(16.dp)) {
@@ -126,7 +143,7 @@ private fun VehicleTaskCard(
                 }
                 if (done == vt.tasks.size && vt.tasks.isNotEmpty()) {
                     Button(
-                        onClick = { viewModel.markVehicleComplete(vt) },
+                        onClick = { showCompleteVehicleDialog = true },
                         modifier = Modifier.weight(1f),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF16A34A))
                     ) {
@@ -135,6 +152,26 @@ private fun VehicleTaskCard(
                 }
             }
         }
+    }
+
+    if (showCompleteVehicleDialog) {
+        AlertDialog(
+            onDismissRequest = { showCompleteVehicleDialog = false },
+            title = { Text("Complete Service") },
+            text = { Text("Are you sure you want to mark truck ${vt.vehicle.registrationNumber} as complete? All tasks have been verified.") },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        viewModel.markVehicleComplete(vt)
+                        showCompleteVehicleDialog = false
+                    },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF16A34A))
+                ) { Text("Confirm Completion") }
+            },
+            dismissButton = {
+                TextButton(onClick = { showCompleteVehicleDialog = false }) { Text(stringResource(R.string.btn_cancel)) }
+            }
+        )
     }
 
     // Dialog: complete task with mechanic + notes

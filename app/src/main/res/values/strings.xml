@@ -65,4 +65,20 @@
     <!-- Employees -->
     <string name="title_employees">Employees</string>
     <string name="label_active">Active</string>
+
+    <!-- Auth -->
+    <string name="title_login">Login</string>
+    <string name="title_signup">Sign Up</string>
+    <string name="label_email">Email Address</string>
+    <string name="label_password">Password</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_signup">Sign Up</string>
+    <string name="link_goto_signup">Don\'t have an account? Sign Up</string>
+    <string name="link_goto_login">Already have an account? Login</string>
+    <string name="error_invalid_email">Please enter a valid email.</string>
+    <string name="error_short_password">Password must be at least 6 characters.</string>
+    <string name="error_auth_failed">Invalid email or password.</string>
+    <string name="error_email_exists">Email already registered.</string>
+    <string name="msg_signup_success">Account created successfully!</string>
+    <string name="btn_logout">Logout</string>
 </resources>

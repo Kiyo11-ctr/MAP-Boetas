@@ -3,6 +3,8 @@ package com.valentinesgarage.ui.reports
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -51,7 +53,7 @@ fun ReportsScreen(viewModel: ReportsViewModel = hiltViewModel()) {
 
             when (selectedTab) {
                 0 -> EmployeeActivityTab(state.employeeReports)
-                1 -> VehicleLogTab(state.vehicleLog)
+                1 -> VehicleLogTab(state.filteredVehicleLog, state.vehicleSearchQuery, viewModel::onVehicleSearchChanged)
             }
         }
     }
@@ -107,42 +109,64 @@ private fun EmployeeActivityTab(reports: List<EmployeeReport>) {
 }
 
 @Composable
-private fun VehicleLogTab(vehicles: List<VehicleWithTasks>) {
-    if (vehicles.isEmpty()) { EmptyState(stringResource(R.string.empty_reports_vehicle)); return }
-    LazyColumn(
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        items(vehicles) { vt ->
-            Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(1.dp)) {
-                Column(Modifier.padding(16.dp)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Column {
-                            Text(vt.vehicle.registrationNumber, fontWeight = FontWeight.Bold, fontSize = 14.sp)
-                            Text(vt.vehicle.makeAndModel, fontSize = 12.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+private fun VehicleLogTab(
+    vehicles: List<VehicleWithTasks>,
+    searchQuery: String,
+    onSearchChanged: (String) -> Unit
+) {
+    Column {
+        OutlinedTextField(
+            value = searchQuery,
+            onValueChange = onSearchChanged,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            placeholder = { Text("Search registration or model...") },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
+            singleLine = true,
+            shape = MaterialTheme.shapes.medium
+        )
+
+        if (vehicles.isEmpty()) {
+            EmptyState(if (searchQuery.isBlank()) stringResource(R.string.empty_reports_vehicle) else "No matching vehicles.")
+        } else {
+            LazyColumn(
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                modifier = Modifier.fillMaxSize()
+            ) {
+                items(vehicles) { vt ->
+                    Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(1.dp)) {
+                        Column(Modifier.padding(16.dp)) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column {
+                                    Text(vt.vehicle.registrationNumber, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+                                    Text(vt.vehicle.makeAndModel, fontSize = 12.sp,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant)
+                                }
+                                ConditionBadge(vt.vehicle.conditionAtCheckin)
+                            }
+                            Divider(Modifier.padding(vertical = 8.dp))
+                            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                                InfoItem(stringResource(R.string.label_checkin_km), "${vt.vehicle.odometerAtCheckin} km")
+                                InfoItem(stringResource(R.string.label_priority), vt.vehicle.priority.name)
+                                InfoItem(stringResource(R.string.label_status), vt.vehicle.status.name.replace('_', ' '))
+                            }
+                            if (vt.vehicle.conditionNotes.isNotBlank()) {
+                                Spacer(Modifier.height(8.dp))
+                                Text("\"${vt.vehicle.conditionNotes}\"", fontSize = 12.sp,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+                            }
+                            Spacer(Modifier.height(8.dp))
+                            TaskProgressBar(
+                                completed = vt.tasks.count { it.isCompleted },
+                                total = vt.tasks.size
+                            )
                         }
-                        ConditionBadge(vt.vehicle.conditionAtCheckin)
                     }
-                    Divider(Modifier.padding(vertical = 8.dp))
-                    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                        InfoItem(stringResource(R.string.label_checkin_km), "${vt.vehicle.odometerAtCheckin} km")
-                        InfoItem(stringResource(R.string.label_priority), vt.vehicle.priority.name)
-                        InfoItem(stringResource(R.string.label_status), vt.vehicle.status.name.replace('_', ' '))
-                    }
-                    if (vt.vehicle.conditionNotes.isNotBlank()) {
-                        Spacer(Modifier.height(8.dp))
-                        Text("\"${vt.vehicle.conditionNotes}\"", fontSize = 12.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                    Spacer(Modifier.height(8.dp))
-                    TaskProgressBar(
-                        completed = vt.tasks.count { it.isCompleted },
-                        total = vt.tasks.size
-                    )
                 }
             }
         }

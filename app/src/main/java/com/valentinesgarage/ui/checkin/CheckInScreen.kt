@@ -77,21 +77,27 @@ fun CheckInScreen(viewModel: CheckInViewModel = hiltViewModel()) {
                 onValueChange = viewModel::onRegistrationChanged,
                 label = { Text(stringResource(R.string.label_registration)) },
                 placeholder = { Text(stringResource(R.string.hint_registration)) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = state.registrationError != null,
+                supportingText = state.registrationError?.let { { Text(it) } }
             )
             OutlinedTextField(
                 value = state.makeAndModel,
                 onValueChange = viewModel::onMakeModelChanged,
-                label = { Text(stringResource(R.string.label_condition)) }, // Wait, checking strings... label_condition is "Vehicle Condition"
+                label = { Text("Make & Model *") },
                 placeholder = { Text(stringResource(R.string.hint_make_model)) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = state.makeModelError != null,
+                supportingText = state.makeModelError?.let { { Text(it) } }
             )
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = state.odometerKm,
                     onValueChange = viewModel::onOdometerChanged,
                     label = { Text(stringResource(R.string.label_odometer)) },
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    isError = state.odometerError != null,
+                    supportingText = state.odometerError?.let { { Text(it) } }
                 )
                 OutlinedTextField(
                     value = state.driverName,
@@ -103,6 +109,9 @@ fun CheckInScreen(viewModel: CheckInViewModel = hiltViewModel()) {
 
             // Condition selection
             SectionHeader(stringResource(R.string.section_condition))
+            if (state.conditionError != null) {
+                Text(state.conditionError!!, color = MaterialTheme.colorScheme.error, fontSize = 12.sp)
+            }
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 VehicleCondition.values().forEach { cond ->
                     val selected = state.condition == cond
@@ -136,7 +145,9 @@ fun CheckInScreen(viewModel: CheckInViewModel = hiltViewModel()) {
                     readOnly = true,
                     label = { Text(stringResource(R.string.label_assign_mechanic)) },
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(mechanicExpanded) },
-                    modifier = Modifier.fillMaxWidth().menuAnchor()
+                    modifier = Modifier.fillMaxWidth().menuAnchor(),
+                    isError = state.mechanicError != null,
+                    supportingText = state.mechanicError?.let { { Text(it) } }
                 )
                 ExposedDropdownMenu(expanded = mechanicExpanded, onDismissRequest = { mechanicExpanded = false }) {
                     state.mechanics.forEach { emp ->

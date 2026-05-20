@@ -23,7 +23,14 @@ data class CheckInUiState(
     val isLoading: Boolean = false,
     val successMessage: String? = null,
     val errorMessage: String? = null,
-    val mechanics: List<com.valentinesgarage.data.model.Employee> = emptyList()
+    val mechanics: List<com.valentinesgarage.data.model.Employee> = emptyList(),
+
+    // Field-specific errors for professional validation
+    val registrationError: String? = null,
+    val makeModelError: String? = null,
+    val odometerError: String? = null,
+    val conditionError: String? = null,
+    val mechanicError: String? = null
 )
 
 /**
@@ -55,44 +62,44 @@ class CheckInViewModel @Inject constructor(
         }
     }
 
-    fun onRegistrationChanged(value: String) = _uiState.update { it.copy(registrationNumber = value.uppercase()) }
-    fun onMakeModelChanged(value: String) = _uiState.update { it.copy(makeAndModel = value) }
+    fun onRegistrationChanged(value: String) = _uiState.update { it.copy(registrationNumber = value.uppercase(), registrationError = null) }
+    fun onMakeModelChanged(value: String) = _uiState.update { it.copy(makeAndModel = value, makeModelError = null) }
     fun onDriverNameChanged(value: String) = _uiState.update { it.copy(driverName = value) }
-    fun onOdometerChanged(value: String) = _uiState.update { it.copy(odometerKm = value) }
-    fun onConditionSelected(value: VehicleCondition) = _uiState.update { it.copy(condition = value) }
+    fun onOdometerChanged(value: String) = _uiState.update { it.copy(odometerKm = value, odometerError = null) }
+    fun onConditionSelected(value: VehicleCondition) = _uiState.update { it.copy(condition = value, conditionError = null) }
     fun onConditionNotesChanged(value: String) = _uiState.update { it.copy(conditionNotes = value) }
-    fun onMechanicSelected(id: Int) = _uiState.update { it.copy(selectedMechanicId = id) }
+    fun onMechanicSelected(id: Int) = _uiState.update { it.copy(selectedMechanicId = id, mechanicError = null) }
     fun onPrioritySelected(value: ServicePriority) = _uiState.update { it.copy(priority = value) }
     fun clearMessages() = _uiState.update { it.copy(successMessage = null, errorMessage = null) }
 
-    /**
-     * Validates and submits the check-in form.
-     * Odometer and condition are recorded here permanently.
-     */
     fun submitCheckIn() {
         val state = _uiState.value
         val odometer = state.odometerKm.toIntOrNull()
 
+        var hasError = false
+
         if (state.registrationNumber.isBlank()) {
-            _uiState.update { it.copy(errorMessage = "Registration number is required.") }
-            return
+            _uiState.update { it.copy(registrationError = "Registration is required") }
+            hasError = true
         }
         if (state.makeAndModel.isBlank()) {
-            _uiState.update { it.copy(errorMessage = "Make & model is required.") }
-            return
+            _uiState.update { it.copy(makeModelError = "Make & model is required") }
+            hasError = true
         }
         if (odometer == null || odometer <= 0) {
-            _uiState.update { it.copy(errorMessage = "Please enter a valid odometer reading.") }
-            return
+            _uiState.update { it.copy(odometerError = "Enter valid km") }
+            hasError = true
         }
         if (state.condition == null) {
-            _uiState.update { it.copy(errorMessage = "Please select the vehicle condition.") }
-            return
+            _uiState.update { it.copy(conditionError = "Select condition") }
+            hasError = true
         }
         if (state.selectedMechanicId == null) {
-            _uiState.update { it.copy(errorMessage = "Please assign a lead mechanic.") }
-            return
+            _uiState.update { it.copy(mechanicError = "Assign a mechanic") }
+            hasError = true
         }
+
+        if (hasError) return
 
         _uiState.update { it.copy(isLoading = true) }
         viewModelScope.launch {
@@ -101,10 +108,10 @@ class CheckInViewModel @Inject constructor(
                     registrationNumber = state.registrationNumber,
                     makeAndModel = state.makeAndModel,
                     driverName = state.driverName,
-                    odometerAtCheckin = odometer,
-                    conditionAtCheckin = state.condition,
+                    odometerAtCheckin = odometer!!,
+                    conditionAtCheckin = state.condition!!,
                     conditionNotes = state.conditionNotes,
-                    assignedMechanicId = state.selectedMechanicId,
+                    assignedMechanicId = state.selectedMechanicId!!,
                     priority = state.priority
                 )
                 // Reset form on success

@@ -4,6 +4,7 @@ import android.content.Context
 import com.valentinesgarage.data.local.EmployeeDao
 import com.valentinesgarage.data.local.GarageDatabase
 import com.valentinesgarage.data.local.ServiceTaskDao
+import com.valentinesgarage.data.local.UserDao
 import com.valentinesgarage.data.local.VehicleDao
 import dagger.Module
 import dagger.Provides
@@ -33,4 +34,7 @@ object DatabaseModule {
 
     @Provides
     fun provideEmployeeDao(db: GarageDatabase): EmployeeDao = db.employeeDao()
+
+    @Provides
+    fun provideUserDao(db: GarageDatabase): UserDao = db.userDao()
 }

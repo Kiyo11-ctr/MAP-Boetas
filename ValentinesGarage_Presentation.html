@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine's Garage – MAP711S Presentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red:    #E8421A;
+    --red2:   #ff6a3d;
+    --navy:   #0f1923;
+    --navy2:  #1a2535;
+    --navy3:  #243045;
+    --slate:  #334155;
+    --muted:  #94a3b8;
+    --light:  #e2e8f0;
+    --white:  #f8fafc;
+    --green:  #16a34a;
+    --amber:  #d97706;
+    --blue:   #1a56db;
+    --code-bg:#0d1117;
+    --code-border:#30363d;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Outfit', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  /* ── SLIDE SHELL ─────────────────────────────── */
+  .slide {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 80px;
+    position: relative;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    overflow: hidden;
+  }
+  .slide:nth-child(even) { background: var(--navy2); }
+  .slide:nth-child(odd)  { background: var(--navy); }
+
+  /* accent stripe left */
+  .slide::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, var(--red), transparent);
+  }
+
+  /* slide number */
+  .slide-num {
+    position: absolute;
+    top: 24px; right: 32px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: .1em;
+  }
+
+  /* ── TYPOGRAPHY ──────────────────────────────── */
+  .tag {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--red2);
+    margin-bottom: 10px;
+  }
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(36px, 5vw, 64px);
+    font-weight: 800;
+    line-height: 1.1;
+    color: #fff;
+  }
+  h1 span { color: var(--red); }
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(22px, 3vw, 38px);
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  h2 span { color: var(--red2); }
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--light);
+    margin-bottom: 8px;
+  }
+  p, li {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #cbd5e1;
+    font-weight: 300;
+  }
+  strong { color: #fff; font-weight: 600; }
+  .lead {
+    font-size: 18px;
+    color: #94a3b8;
+    margin-top: 12px;
+    max-width: 700px;
+    font-weight: 300;
+  }
+
+  /* ── CODE BLOCKS ─────────────────────────────── */
+  pre {
+    background: var(--code-bg);
+    border: 1px solid var(--code-border);
+    border-radius: 10px;
+    padding: 18px 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.65;
+    overflow-x: auto;
+    margin: 10px 0;
+  }
+  .kw  { color: #ff7b72; }
+  .fn  { color: #d2a8ff; }
+  .str { color: #a5d6ff; }
+  .cm  { color: #8b949e; font-style: italic; }
+  .an  { color: #79c0ff; }
+  .tp  { color: #ffa657; }
+  .nu  { color: #79c0ff; }
+  .op  { color: #ff7b72; }
+
+  /* ── GRID LAYOUTS ────────────────────────────── */
+  .two-col  { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 20px; }
+  .three-col{ display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 20px; }
+  .code-split { display: grid; grid-template-columns: 1fr 1.2fr; gap: 28px; align-items: start; margin-top: 20px; }
+
+  /* ── CARDS ───────────────────────────────────── */
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    padding: 20px 24px;
+  }
+  .card.accent { border-color: var(--red); }
+  .card.green-card  { border-color: var(--green); }
+  .card.blue-card   { border-color: var(--blue); }
+  .card.amber-card  { border-color: var(--amber); }
+
+  /* ── LAYER BOXES ─────────────────────────────── */
+  .layer {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .layer-ui    { background: rgba(232,66,26,0.12); border: 1px solid rgba(232,66,26,0.3); }
+  .layer-domain{ background: rgba(26,86,219,0.12); border: 1px solid rgba(26,86,219,0.3); }
+  .layer-data  { background: rgba(22,163,74,0.12); border: 1px solid rgba(22,163,74,0.3); }
+  .layer-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .ui-icon   { background: rgba(232,66,26,0.25); }
+  .dom-icon  { background: rgba(26,86,219,0.25); }
+  .data-icon { background: rgba(22,163,74,0.25); }
+
+  /* ── BADGES ──────────────────────────────────── */
+  .badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .badge-red    { background: rgba(232,66,26,.2); color: #ff7b72; }
+  .badge-green  { background: rgba(22,163,74,.2); color: #7ee787; }
+  .badge-blue   { background: rgba(26,86,219,.2); color: #79c0ff; }
+  .badge-amber  { background: rgba(217,119,6,.2); color: #ffa657; }
+  .badge-purple { background: rgba(139,92,246,.2); color: #d2a8ff; }
+
+  /* ── ANSWER BOX ──────────────────────────────── */
+  .answer-box {
+    background: rgba(22,163,74,0.08);
+    border: 1px solid rgba(22,163,74,0.3);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-top: 14px;
+  }
+  .answer-box p { color: #86efac; font-size: 14px; }
+  .answer-box strong { color: #4ade80; }
+
+  .question-box {
+    background: rgba(232,66,26,0.08);
+    border: 1px solid rgba(232,66,26,0.3);
+    border-radius: 10px;
+    padding: 12px 18px;
+    margin-bottom: 16px;
+  }
+  .question-box p { color: #fca5a5; font-size: 14px; font-style: italic; }
+
+  /* ── FILE TREE ───────────────────────────────── */
+  .file-tree {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: #8b949e;
+  }
+  .file-tree .dir  { color: #79c0ff; }
+  .file-tree .file { color: #e6edf3; }
+  .file-tree .desc { color: #6e7681; margin-left: 4px; }
+
+  /* ── COMPARISON TABLE ────────────────────────── */
+  table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+  th { background: rgba(255,255,255,0.06); padding: 10px 16px; text-align: left;
+       font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
+       color: #fff; border-bottom: 1px solid rgba(255,255,255,0.1); }
+  td { padding: 10px 16px; border-bottom: 1px solid rgba(255,255,255,0.05);
+       font-size: 13.5px; color: #cbd5e1; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+
+  /* ── DIVIDER ─────────────────────────────────── */
+  .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 18px 0; }
+
+  /* ── COVER SLIDE ─────────────────────────────── */
+  .cover {
+    background: linear-gradient(135deg, #0f1923 0%, #1a0a05 60%, #0f1923 100%) !important;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    right: -100px; top: -100px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232,66,26,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cover-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 20px;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .cover-sub span { color: var(--red2); }
+
+  ul { padding-left: 20px; }
+  li { margin-bottom: 6px; }
+
+  /* ── SCREENSHOT FRAME ────────────────────────── */
+  .phone-frame {
+    background: var(--navy3);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 14px;
+    text-align: center;
+  }
+  .phone-frame img { width: 100%; border-radius: 8px; }
+  .phone-label { font-size: 11px; color: var(--muted); margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace; }
+
+  /* ── ARROW ───────────────────────────────────── */
+  .arrow { text-align: center; color: var(--muted); font-size: 22px; margin: 4px 0; }
+
+  /* ── NAV BAR ─────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 48px;
+    background: rgba(15,25,35,0.95);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center;
+    padding: 0 24px; gap: 6px;
+    z-index: 1000; flex-wrap: wrap;
+  }
+  nav a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    text-decoration: none; padding: 4px 8px;
+    border-radius: 4px; transition: all .15s;
+    white-space: nowrap;
+  }
+  nav a:hover { background: rgba(232,66,26,0.2); color: var(--red2); }
+  body { padding-top: 48px; }
+
+  @media (max-width: 768px) {
+    .slide { padding: 40px 28px; }
+    .two-col, .three-col, .code-split { grid-template-columns: 1fr; }
+    nav { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#s1">Cover</a>
+  <a href="#s2">Why Built</a>
+  <a href="#s3">Architecture</a>
+  <a href="#s4">File Map</a>
+  <a href="#s5">Data Layer</a>
+  <a href="#s6">Data Classes</a>
+  <a href="#s7">DAOs</a>
+  <a href="#s8">Repositories</a>
+  <a href="#s9">DI / Hilt</a>
+  <a href="#s10">Singleton</a>
+  <a href="#s11">ViewModels</a>
+  <a href="#s12">StateFlow</a>
+  <a href="#s13">Lambdas</a>
+  <a href="#s14">UDF</a>
+  <a href="#s15">Screens</a>
+  <a href="#s16">Single Truth</a>
+  <a href="#s17">No Activity</a>
+  <a href="#s18">Circular Dep</a>
+  <a href="#s19">Coroutines</a>
+  <a href="#s20">Rubric</a>
+  <a href="#s21">Screenshots</a>
+  <a href="#s22">Q&A</a>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 1 – COVER -->
+<section class="slide cover" id="s1">
+  <div class="slide-num">01 / 22</div>
+  <div class="tag">MAP711S · Mobile Application Development · NUST</div>
+  <h1>Valentine's<br><span>Garage</span></h1>
+  <p class="lead">Truck Check-In, Collaborative Service Boards & Management Reporting — built with Kotlin, Jetpack Compose and Clean Architecture.</p>
+  <div class="cover-sub">
+    <span>Kotlin</span> · Android Jetpack Compose · Room · Hilt DI · MVVM · StateFlow · Coroutines
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 2 – WHY -->
+<section class="slide" id="s2">
+  <div class="slide-num">02 / 22</div>
+  <div class="tag">Assignment Requirements</div>
+  <h2>Why This App Was <span>Built</span></h2>
+  <div class="two-col" style="margin-top:20px">
+    <div>
+      <h3>The Problem</h3>
+      <ul>
+        <li>Trucks arrive at Valentine's Garage with <strong>unknown prior damage</strong> — leading to false claims against the garage</li>
+        <li>Mechanics work on the same vehicle without knowing <strong>what others have already done</strong>, causing repeated or skipped tasks</li>
+        <li>Valentine (the owner) has <strong>no visibility</strong> into what each employee actually completed</li>
+        <li>Vehicles could be driven while in the garage — <strong>odometer misuse</strong></li>
+      </ul>
+    </div>
+    <div>
+      <h3>The Three Core Requirements</h3>
+      <div class="card accent" style="margin-bottom:10px">
+        <p><strong>① Truck Check-In</strong><br>Capture registration, odometer km, and condition at arrival — permanently — so a baseline exists before any work begins.</p>
+      </div>
+      <div class="card blue-card" style="margin-bottom:10px">
+        <p><strong>② Collaborative Service Board</strong><br>Mechanics tick off and write notes on tasks per vehicle. Every completion is attributed to a named mechanic.</p>
+      </div>
+      <div class="card green-card">
+        <p><strong>③ Management Reports</strong><br>Valentine sees what each employee did and the condition of every vehicle at check-in.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 3 – ARCHITECTURE -->
+<section class="slide" id="s3">
+  <div class="slide-num">03 / 22</div>
+  <div class="tag">App Architecture</div>
+  <h2>Three-Layer <span>MVVM</span> Architecture</h2>
+  <p style="margin-top:6px">Each layer has a single responsibility. No layer skips another. Dependencies only point <strong>downward</strong>.</p>
+  <div class="code-split">
+    <div style="margin-top:16px">
+      <div class="layer layer-ui">
+        <div class="layer-icon ui-icon">🖥</div>
+        <div>
+          <h3 style="color:#fca5a5;margin-bottom:4px">UI Layer</h3>
+          <p><strong>Composable Screens + ViewModels</strong><br>Renders state. Sends events up. Never talks to the database. Files: DashboardScreen, CheckInScreen, ServiceBoardScreen, ReportsScreen, EmployeesScreen + their ViewModels.</p>
+        </div>
+      </div>
+      <div class="arrow">↓</div>
+      <div class="layer layer-domain">
+        <div class="layer-icon dom-icon">🧠</div>
+        <div>
+          <h3 style="color:#93c5fd;margin-bottom:4px">Domain / Repository Layer</h3>
+          <p><strong>VehicleRepository + EmployeeRepository</strong><br>Contains all business logic. Builds checklists, validates check-in data, assembles EmployeeReport objects. Sits between UI and Data.</p>
+        </div>
+      </div>
+      <div class="arrow">↓</div>
+      <div class="layer layer-data">
+        <div class="layer-icon data-icon">🗄</div>
+        <div>
+          <h3 style="color:#86efac;margin-bottom:4px">Data Layer</h3>
+          <p><strong>Room Database + DAOs + Models</strong><br>Persists everything. VehicleDao, ServiceTaskDao, EmployeeDao. GarageDatabase. GarageConverters. Pure data access — zero business logic here.</p>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <h3>Why this way?</h3>
+      <p style="margin-bottom:12px">Referenced directly from the course notes on <em>Layered Architecture</em>: each layer is independently testable, replaceable, and understandable.</p>
+      <div class="card">
+        <p><strong>MVVM = Model–View–ViewModel</strong><br><br>
+        <strong>Model</strong> = data classes + Room (Vehicle, ServiceTask, Employee)<br><br>
+        <strong>View</strong> = Composable screens (pure functions that render state)<br><br>
+        <strong>ViewModel</strong> = holds UI state as StateFlow, processes events, calls repository
+        </p>
+      </div>
+      <div class="answer-box" style="margin-top:12px">
+        <p><strong>Rubric criterion: App Architecture (20/20)</strong><br>Layered architecture ✓ · Modularisation ✓ · Resource files ✓</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 4 – FILE MAP -->
+<section class="slide" id="s4">
+  <div class="slide-num">04 / 22</div>
+  <div class="tag">Project Structure</div>
+  <h2>Every File and <span>Why It Exists</span></h2>
+  <div class="two-col">
+    <div class="file-tree">
+<span class="dir">com.valentinesgarage/</span><br>
+├── <span class="file">GarageApplication.kt</span><span class="desc">  @HiltAndroidApp — triggers DI graph, seeds DB</span><br>
+├── <span class="file">MainActivity.kt</span><span class="desc">       single entry point, hosts NavHost</span><br>
+<br>
+<span class="dir">├── data/</span><br>
+<span class="dir">│   ├── model/</span><br>
+│   │   ├── <span class="file">Vehicle.kt</span><span class="desc">         @Entity — truck record</span><br>
+│   │   ├── <span class="file">ServiceTask.kt</span><span class="desc">     @Entity — one checklist item</span><br>
+│   │   ├── <span class="file">Employee.kt</span><span class="desc">        @Entity — mechanic / manager</span><br>
+│   │   ├── <span class="file">VehicleWithTasks.kt</span><span class="desc"> Room @Relation join</span><br>
+│   │   └── <span class="file">EmployeeReport.kt</span><span class="desc">  non-persisted report model</span><br>
+<span class="dir">│   ├── local/</span><br>
+│   │   ├── <span class="file">GarageDatabase.kt</span><span class="desc">  Room DB — single source of truth</span><br>
+│   │   ├── <span class="file">GarageConverters.kt</span><span class="desc"> enum↔String converters</span><br>
+│   │   ├── <span class="file">VehicleDao.kt</span><span class="desc">      SQL for vehicles</span><br>
+│   │   ├── <span class="file">ServiceTaskDao.kt</span><span class="desc">  SQL for tasks</span><br>
+│   │   └── <span class="file">EmployeeDao.kt</span><span class="desc">     SQL for employees</span><br>
+<span class="dir">│   └── repository/</span><br>
+│       ├── <span class="file">VehicleRepository.kt</span><span class="desc"> business logic layer</span><br>
+│       └── <span class="file">EmployeeRepository.kt</span><span class="desc"> report assembly</span><br>
+    </div>
+    <div class="file-tree">
+<span class="dir">├── di/</span><br>
+│   ├── <span class="file">DatabaseModule.kt</span><span class="desc">  Hilt @Provides for DB + DAOs</span><br>
+│   └── <span class="file">SeedModule.kt</span><span class="desc">      seeds 6 default employees</span><br>
+<br>
+<span class="dir">└── ui/</span><br>
+<span class="dir">    ├── theme/</span><br>
+│       └── <span class="file">Theme.kt</span><span class="desc">       Material3 colour scheme</span><br>
+<span class="dir">    ├── navigation/</span><br>
+│       └── <span class="file">NavHost.kt</span><span class="desc">     sealed Screen routes, bottom nav</span><br>
+<span class="dir">    ├── components/</span><br>
+│       └── <span class="file">SharedComponents.kt</span><span class="desc"> ConditionBadge, StatCard, TaskProgressBar</span><br>
+<span class="dir">    ├── dashboard/</span><br>
+│       ├── <span class="file">DashboardScreen.kt</span><br>
+│       └── <span class="file">DashboardViewModel.kt</span><br>
+<span class="dir">    ├── checkin/</span><br>
+│       ├── <span class="file">CheckInScreen.kt</span><br>
+│       └── <span class="file">CheckInViewModel.kt</span><br>
+<span class="dir">    ├── service/</span><br>
+│       ├── <span class="file">ServiceBoardScreen.kt</span><br>
+│       └── <span class="file">ServiceViewModel.kt</span><br>
+<span class="dir">    ├── reports/</span><br>
+│       ├── <span class="file">ReportsScreen.kt</span><br>
+│       └── <span class="file">ReportsViewModel.kt</span><br>
+<span class="dir">    └── employees/</span><br>
+        ├── <span class="file">EmployeesScreen.kt</span><br>
+        └── <span class="file">EmployeesViewModel.kt</span><br>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 5 – DATA LAYER -->
+<section class="slide" id="s5">
+  <div class="slide-num">05 / 22</div>
+  <div class="tag">Data Layer</div>
+  <h2>Room Database — <span>The Data Layer</span></h2>
+  <div class="code-split">
+    <div>
+      <h3>GarageDatabase.kt</h3>
+      <pre><span class="an">@Database</span>(
+    entities = [Vehicle::<span class="kw">class</span>,
+                ServiceTask::<span class="kw">class</span>,
+                Employee::<span class="kw">class</span>],
+    version  = <span class="nu">1</span>,
+    exportSchema = <span class="kw">false</span>
+)
+<span class="an">@TypeConverters</span>(GarageConverters::<span class="kw">class</span>)
+<span class="kw">abstract class</span> <span class="tp">GarageDatabase</span> : <span class="tp">RoomDatabase</span>() {
+    <span class="kw">abstract fun</span> <span class="fn">vehicleDao</span>(): <span class="tp">VehicleDao</span>
+    <span class="kw">abstract fun</span> <span class="fn">serviceTaskDao</span>(): <span class="tp">ServiceTaskDao</span>
+    <span class="kw">abstract fun</span> <span class="fn">employeeDao</span>(): <span class="tp">EmployeeDao</span>
+
+    <span class="kw">companion object</span> {
+        <span class="kw">fun</span> <span class="fn">build</span>(context: <span class="tp">Context</span>) =
+            Room.<span class="fn">databaseBuilder</span>(
+                context,
+                GarageDatabase::<span class="kw">class</span>.java,
+                <span class="str">"garage_db"</span>
+            ).<span class="fn">build</span>()
+    }
+}</pre>
+      <h3 style="margin-top:14px">GarageConverters.kt</h3>
+      <pre><span class="cm">// Room can only store primitives.</span>
+<span class="cm">// Converters map our enums to Strings.</span>
+<span class="kw">class</span> <span class="tp">GarageConverters</span> {
+  <span class="an">@TypeConverter</span>
+  <span class="kw">fun</span> <span class="fn">condToStr</span>(v: <span class="tp">VehicleCondition</span>) = v.name
+  <span class="an">@TypeConverter</span>
+  <span class="kw">fun</span> <span class="fn">strToCond</span>(v: <span class="tp">String</span>) =
+      <span class="tp">VehicleCondition</span>.<span class="fn">valueOf</span>(v)
+  <span class="cm">// ... one pair per enum type</span>
+}</pre>
+    </div>
+    <div>
+      <h3>Three Tables in the Database</h3>
+      <div class="card" style="margin-bottom:10px">
+        <p><span class="badge badge-red">vehicles</span> &nbsp; Stores every checked-in truck including <strong>odometerAtCheckin</strong> and <strong>conditionAtCheckin</strong> — these fields are <em>never updated</em> after insertion, forming a permanent audit record.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <p><span class="badge badge-blue">service_tasks</span> &nbsp; Each row is one checklist item. Foreign key → vehicleId (CASCADE DELETE). Stores <strong>completedByMechanicId</strong> — the audit trail for who did what.</p>
+      </div>
+      <div class="card">
+        <p><span class="badge badge-green">employees</span> &nbsp; Mechanic/manager roster. Seeded on first launch. Referenced by tasks to attribute completed work.</p>
+      </div>
+      <div class="answer-box">
+        <p><strong>Foreign Key CASCADE</strong>: when a vehicle is deleted, all its service tasks are automatically deleted too — no orphan records.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 6 – DATA CLASSES -->
+<section class="slide" id="s6">
+  <div class="slide-num">06 / 22</div>
+  <div class="tag">Exam Question — Data Classes</div>
+  <div class="question-box"><p>❓ "What is a data class and did you implement any? Show it in your code."</p></div>
+  <h2>Data Classes — <span>What & Where</span></h2>
+  <div class="code-split">
+    <div>
+      <pre><span class="cm">// data class = a class whose primary purpose</span>
+<span class="cm">// is to HOLD data. Kotlin auto-generates:</span>
+<span class="cm">//  equals() / hashCode() / toString() / copy()</span>
+
+<span class="an">@Entity</span>(tableName = <span class="str">"vehicles"</span>)
+<span class="kw">data class</span> <span class="tp">Vehicle</span>(
+    <span class="an">@PrimaryKey</span>(autoGenerate = <span class="kw">true</span>)
+    <span class="kw">val</span> id: <span class="tp">Int</span> = <span class="nu">0</span>,
+    <span class="kw">val</span> registrationNumber : <span class="tp">String</span>,
+    <span class="kw">val</span> odometerAtCheckin  : <span class="tp">Int</span>,
+    <span class="kw">val</span> conditionAtCheckin : <span class="tp">VehicleCondition</span>,
+    <span class="kw">val</span> conditionNotes     : <span class="tp">String</span>,
+    <span class="kw">val</span> status : <span class="tp">VehicleStatus</span> = <span class="tp">VehicleStatus</span>.CHECKED_IN
+)
+
+<span class="cm">// copy() is crucial — used in repository</span>
+<span class="cm">// to update a task without mutating:</span>
+serviceTaskDao.<span class="fn">update</span>(
+    task.<span class="fn">copy</span>(
+        isCompleted           = <span class="kw">true</span>,
+        completedByMechanicId = mechanicId,
+        mechanicNotes         = notes
+    )
+)</pre>
+    </div>
+    <div>
+      <h3>All data classes in the project</h3>
+      <table>
+        <tr><th>Class</th><th>Purpose</th></tr>
+        <tr><td><code>Vehicle</code></td><td>Room entity — truck record + audit fields</td></tr>
+        <tr><td><code>ServiceTask</code></td><td>Room entity — one checklist item per vehicle</td></tr>
+        <tr><td><code>Employee</code></td><td>Room entity — mechanic/manager</td></tr>
+        <tr><td><code>VehicleWithTasks</code></td><td>Room @Relation — joins vehicle + its tasks</td></tr>
+        <tr><td><code>EmployeeReport</code></td><td>Non-persisted — computed for Reports screen</td></tr>
+        <tr><td><code>CheckInUiState</code></td><td>ViewModel state holder for CheckIn screen</td></tr>
+        <tr><td><code>DashboardUiState</code></td><td>ViewModel state holder for Dashboard</td></tr>
+        <tr><td><code>ServiceUiState</code></td><td>ViewModel state holder for Service Board</td></tr>
+        <tr><td><code>ReportsUiState</code></td><td>ViewModel state holder for Reports</td></tr>
+        <tr><td><code>EmployeesUiState</code></td><td>ViewModel state holder for Employees</td></tr>
+      </table>
+      <div class="answer-box">
+        <p>Every data class in this project is <strong>immutable</strong> (all <code>val</code>, no <code>var</code>). State changes are made using <code>.copy()</code> — the Kotlin way of producing a new instance with modified fields, without mutating the original. This is required for StateFlow to detect changes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 7 – DAOs -->
+<section class="slide" id="s7">
+  <div class="slide-num">07 / 22</div>
+  <div class="tag">Data Layer</div>
+  <h2>DAOs — Data Access <span>Objects</span></h2>
+  <p>Interfaces annotated with <code>@Dao</code>. Room generates the implementation at compile time. The UI <strong>never calls these directly</strong> — only repositories do.</p>
+  <div class="two-col" style="margin-top:16px">
+    <div>
+      <pre><span class="an">@Dao</span>
+<span class="kw">interface</span> <span class="tp">VehicleDao</span> {
+
+    <span class="an">@Insert</span>(onConflict = OnConflictStrategy.REPLACE)
+    <span class="kw">suspend fun</span> <span class="fn">insert</span>(vehicle: <span class="tp">Vehicle</span>): <span class="tp">Long</span>
+
+    <span class="an">@Update</span>
+    <span class="kw">suspend fun</span> <span class="fn">update</span>(vehicle: <span class="tp">Vehicle</span>)
+
+    <span class="cm">// @Transaction: fetches Vehicle + all its</span>
+    <span class="cm">// ServiceTasks in one atomic DB operation</span>
+    <span class="an">@Transaction</span>
+    <span class="an">@Query</span>(<span class="str">"SELECT * FROM vehicles ORDER BY checkinDateTime DESC"</span>)
+    <span class="kw">fun</span> <span class="fn">getAllWithTasks</span>(): <span class="tp">Flow</span>&lt;<span class="tp">List</span>&lt;<span class="tp">VehicleWithTasks</span>&gt;&gt;
+}</pre>
+      <pre><span class="an">@Dao</span>
+<span class="kw">interface</span> <span class="tp">ServiceTaskDao</span> {
+    <span class="an">@Insert</span>(onConflict = OnConflictStrategy.REPLACE)
+    <span class="kw">suspend fun</span> <span class="fn">insertAll</span>(tasks: <span class="tp">List</span>&lt;<span class="tp">ServiceTask</span>&gt;)
+
+    <span class="an">@Update</span>
+    <span class="kw">suspend fun</span> <span class="fn">update</span>(task: <span class="tp">ServiceTask</span>)
+
+    <span class="cm">// Returns all tasks a specific mechanic</span>
+    <span class="cm">// completed — used for Reports screen</span>
+    <span class="an">@Query</span>(<span class="str">"SELECT * FROM service_tasks WHERE completedByMechanicId = :mechanicId AND isCompleted = 1"</span>)
+    <span class="kw">fun</span> <span class="fn">getByMechanic</span>(mechanicId: <span class="tp">Int</span>): <span class="tp">Flow</span>&lt;<span class="tp">List</span>&lt;<span class="tp">ServiceTask</span>&gt;&gt;
+}</pre>
+    </div>
+    <div>
+      <h3>Key design decisions in the DAOs</h3>
+      <div class="card" style="margin-bottom:10px">
+        <p><span class="badge badge-blue">suspend fun</span><br>All write operations are <code>suspend</code> functions — they run on a coroutine, off the main thread. Room enforces this: calling a suspend function from the main thread is a compile error.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <p><span class="badge badge-green">Flow&lt;T&gt;</span><br>All read operations return <code>Flow</code>. This means every time the database changes, Room automatically re-emits the new data. The UI re-renders without polling.</p>
+      </div>
+      <div class="card">
+        <p><span class="badge badge-amber">@Transaction</span><br><code>getAllWithTasks()</code> fetches vehicles AND their tasks atomically. Without this, the two queries could return inconsistent results if another thread writes between them.</p>
+      </div>
+      <div class="answer-box">
+        <p><strong>Why not put queries directly in an Activity?</strong> See Slide 17 for the full answer.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 8 – REPOSITORIES -->
+<section class="slide" id="s8">
+  <div class="slide-num">08 / 22</div>
+  <div class="tag">Repository Layer</div>
+  <h2>Repositories — <span>Business Logic</span></h2>
+  <p>Repositories are the <strong>only</strong> layer that talks to DAOs. They contain business logic the ViewModels should not know about.</p>
+  <div class="code-split">
+    <div>
+      <pre><span class="an">@Singleton</span>
+<span class="kw">class</span> <span class="tp">VehicleRepository</span> <span class="an">@Inject</span> <span class="kw">constructor</span>(
+    <span class="kw">private val</span> vehicleDao     : <span class="tp">VehicleDao</span>,
+    <span class="kw">private val</span> serviceTaskDao : <span class="tp">ServiceTaskDao</span>
+) {
+    <span class="cm">// Exposes live stream — DB is the source of truth</span>
+    <span class="kw">val</span> allVehiclesWithTasks: <span class="tp">Flow</span>&lt;<span class="tp">List</span>&lt;<span class="tp">VehicleWithTasks</span>&gt;&gt; =
+        vehicleDao.<span class="fn">getAllWithTasks</span>()
+
+    <span class="cm">// Business rule: odometer is PERMANENTLY recorded</span>
+    <span class="kw">suspend fun</span> <span class="fn">checkInVehicle</span>(...) {
+        <span class="kw">val</span> id = vehicleDao.<span class="fn">insert</span>(<span class="tp">Vehicle</span>(...)).<span class="fn">toInt</span>()
+        <span class="cm">// Auto-create checklist based on condition</span>
+        serviceTaskDao.<span class="fn">insertAll</span>(
+            <span class="fn">buildChecklist</span>(id, conditionAtCheckin)
+        )
+    }
+
+    <span class="cm">// Lambda used in buildChecklist:</span>
+    <span class="kw">private fun</span> <span class="fn">buildChecklist</span>(
+        vehicleId: <span class="tp">Int</span>,
+        condition: <span class="tp">VehicleCondition</span>
+    ): <span class="tp">List</span>&lt;<span class="tp">ServiceTask</span>&gt; {
+        <span class="kw">val</span> base = <span class="fn">listOf</span>(
+            <span class="fn">task</span>(vehicleId, <span class="str">"Engine oil & filter"</span>, ENGINE),
+            <span class="fn">task</span>(vehicleId, <span class="str">"Check tyre pressure"</span>, TYRES),
+            <span class="cm">// ... 6 more base tasks</span>
+        )
+        <span class="kw">val</span> extra = <span class="kw">when</span> (condition) {
+            CRITICAL -> <span class="fn">listOf</span>(
+                <span class="fn">task</span>(vehicleId, <span class="str">"OBD-II diagnostic"</span>, DIAG),
+                <span class="fn">task</span>(vehicleId, <span class="str">"Inspect injectors"</span>, ENGINE)
+            )
+            FAIR -> <span class="fn">listOf</span>(<span class="fn">task</span>(vehicleId, <span class="str">"OBD-II diagnostic"</span>, DIAG))
+            GOOD -> <span class="fn">emptyList</span>()
+        }
+        <span class="kw">return</span> base + extra
+    }
+}</pre>
+    </div>
+    <div>
+      <h3>What business logic lives here?</h3>
+      <div class="card" style="margin-bottom:10px">
+        <p><strong>Auto-checklist generation</strong><br>When a truck is checked in, <code>buildChecklist()</code> creates 8 base tasks + up to 3 extra tasks depending on the vehicle's condition. A CRITICAL vehicle gets OBD diagnostics automatically added. This is business logic — it belongs in the repository, not in the UI.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <p><strong>Immutable check-in record</strong><br><code>checkInVehicle()</code> records the odometer and condition. There is no <code>updateVehicle()</code> that lets these fields be changed — the record is permanent by design.</p>
+      </div>
+      <div class="card">
+        <p><strong>EmployeeRepository.getEmployeeReports()</strong><br>Assembles <code>EmployeeReport</code> objects by joining employee data with completed task data. The Reports screen just asks for this — it doesn't know how it's assembled.</p>
+      </div>
+      <div class="answer-box">
+        <p><code>@Singleton</code> scope means Hilt creates <strong>one instance</strong> of each repository for the entire app lifetime. See Slide 10 for Singleton vs Scoped.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 9 – DI / HILT -->
+<section class="slide" id="s9">
+  <div class="slide-num">09 / 22</div>
+  <div class="tag">Dependency Injection</div>
+  <h2>Hilt DI — <span>DatabaseModule.kt</span></h2>
+  <p>Instead of classes creating their own dependencies (tight coupling), Hilt <em>injects</em> them. This makes the code testable and modular.</p>
+  <div class="code-split">
+    <div>
+      <pre><span class="cm">// DatabaseModule.kt</span>
+<span class="an">@Module</span>
+<span class="an">@InstallIn</span>(<span class="tp">SingletonComponent</span>::<span class="kw">class</span>)
+<span class="kw">object</span> <span class="tp">DatabaseModule</span> {
+
+    <span class="cm">// @Singleton = one instance for the whole app</span>
+    <span class="an">@Provides</span> <span class="an">@Singleton</span>
+    <span class="kw">fun</span> <span class="fn">provideDatabase</span>(
+        <span class="an">@ApplicationContext</span> ctx: <span class="tp">Context</span>
+    ): <span class="tp">GarageDatabase</span> = <span class="tp">GarageDatabase</span>.<span class="fn">build</span>(ctx)
+
+    <span class="cm">// DAOs are provided from the single DB instance</span>
+    <span class="an">@Provides</span>
+    <span class="kw">fun</span> <span class="fn">provideVehicleDao</span>(db: <span class="tp">GarageDatabase</span>)
+        = db.<span class="fn">vehicleDao</span>()
+
+    <span class="an">@Provides</span>
+    <span class="kw">fun</span> <span class="fn">provideServiceTaskDao</span>(db: <span class="tp">GarageDatabase</span>)
+        = db.<span class="fn">serviceTaskDao</span>()
+
+    <span class="an">@Provides</span>
+    <span class="kw">fun</span> <span class="fn">provideEmployeeDao</span>(db: <span class="tp">GarageDatabase</span>)
+        = db.<span class="fn">employeeDao</span>()
+}</pre>
+      <pre><span class="cm">// How ViewModels receive dependencies:</span>
+<span class="an">@HiltViewModel</span>
+<span class="kw">class</span> <span class="tp">CheckInViewModel</span> <span class="an">@Inject</span> <span class="kw">constructor</span>(
+    <span class="kw">private val</span> vehicleRepo  : <span class="tp">VehicleRepository</span>,
+    <span class="kw">private val</span> employeeRepo : <span class="tp">EmployeeRepository</span>
+) : <span class="tp">ViewModel</span>() { ... }</pre>
+    </div>
+    <div>
+      <h3>The DI Dependency Graph</h3>
+      <div class="card" style="font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2">
+        <span style="color:#fca5a5">GarageApplication</span><br>
+        &nbsp;└─ injects → <span style="color:#ffa657">DatabaseSeeder</span><br>
+        <br>
+        <span style="color:#79c0ff">DatabaseModule</span><br>
+        &nbsp;└─ provides → <span style="color:#86efac">GarageDatabase</span> (Singleton)<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ provides → <span style="color:#86efac">VehicleDao</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─ provides → <span style="color:#86efac">ServiceTaskDao</span><br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ provides → <span style="color:#86efac">EmployeeDao</span><br>
+        <br>
+        <span style="color:#d2a8ff">VehicleRepository</span> (Singleton)<br>
+        &nbsp;└─ injects VehicleDao + ServiceTaskDao<br>
+        <br>
+        <span style="color:#d2a8ff">EmployeeRepository</span> (Singleton)<br>
+        &nbsp;└─ injects EmployeeDao + ServiceTaskDao<br>
+        <br>
+        <span style="color:#fca5a5">@HiltViewModels</span> (ViewModelScoped)<br>
+        &nbsp;└─ inject Repositories
+      </div>
+      <div class="answer-box">
+        <p><strong>No new() calls anywhere.</strong> Every dependency is declared in the constructor and Hilt provides it. This is the core principle of dependency injection.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 10 – SINGLETON VS SCOPED -->
+<section class="slide" id="s10">
+  <div class="slide-num">10 / 22</div>
+  <div class="tag">Exam Question — DI Scopes</div>
+  <div class="question-box"><p>❓ "What is the difference between a Singleton and Scoped dependency? Which did you use? Show it in your code."</p></div>
+  <h2>Singleton vs <span>Scoped</span> — Explained</h2>
+  <div class="two-col">
+    <div>
+      <div class="card accent" style="margin-bottom:12px">
+        <h3 style="color:#fca5a5">@Singleton</h3>
+        <p>One instance created for the <strong>entire application lifetime</strong>. The same object is reused every time it is injected anywhere in the app. Destroyed when the app process dies.</p>
+        <div class="divider"></div>
+        <p><strong>We used @Singleton for:</strong></p>
+        <ul style="margin-top:8px">
+          <li><code>GarageDatabase</code> — one DB connection for the whole app</li>
+          <li><code>VehicleRepository</code> — shared state, one instance</li>
+          <li><code>EmployeeRepository</code> — shared state, one instance</li>
+          <li><code>DatabaseSeeder</code> — only needs to run once</li>
+        </ul>
+      </div>
+      <pre><span class="cm">// In DatabaseModule.kt:</span>
+<span class="an">@Provides</span> <span class="an">@Singleton</span>
+<span class="kw">fun</span> <span class="fn">provideDatabase</span>(...): <span class="tp">GarageDatabase</span>
+
+<span class="cm">// In repositories:</span>
+<span class="an">@Singleton</span>
+<span class="kw">class</span> <span class="tp">VehicleRepository</span> <span class="an">@Inject</span> <span class="kw">constructor</span>(...)</pre>
+    </div>
+    <div>
+      <div class="card blue-card" style="margin-bottom:12px">
+        <h3 style="color:#93c5fd">ViewModelScoped (Scoped)</h3>
+        <p>One instance per <strong>ViewModel lifetime</strong>. Created when the ViewModel is created, destroyed when the ViewModel is cleared. Each screen gets its own scoped instance.</p>
+        <div class="divider"></div>
+        <p><strong>Our ViewModels are ViewModelScoped</strong> — Hilt's <code>@HiltViewModel</code> annotation handles this automatically. When you navigate away from a screen and its ViewModel is cleared, those scoped dependencies are also released.</p>
+      </div>
+      <pre><span class="cm">// @HiltViewModel = ViewModelScoped by default</span>
+<span class="an">@HiltViewModel</span>
+<span class="kw">class</span> <span class="tp">DashboardViewModel</span> <span class="an">@Inject</span> <span class="kw">constructor</span>(
+    repo: <span class="tp">VehicleRepository</span> <span class="cm">// Singleton injected in</span>
+) : <span class="tp">ViewModel</span>() { ... }</pre>
+      <div class="answer-box">
+        <p><strong>Why Singleton for repositories?</strong> The database is a shared resource. If two ViewModels had different repository instances, they could see different states. A Singleton ensures the <em>same Flow</em> is observed everywhere — one source of truth.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 11 – VIEWMODELS -->
+<section class="slide" id="s11">
+  <div class="slide-num">11 / 22</div>
+  <div class="tag">UI Layer</div>
+  <h2>ViewModels — <span>State Holders</span></h2>
+  <div class="question-box"><p>❓ "What happens if the ViewModel is removed?"</p></div>
+  <div class="code-split">
+    <div>
+      <pre><span class="an">@HiltViewModel</span>
+<span class="kw">class</span> <span class="tp">CheckInViewModel</span> <span class="an">@Inject</span> <span class="kw">constructor</span>(
+    <span class="kw">private val</span> vehicleRepo  : <span class="tp">VehicleRepository</span>,
+    <span class="kw">private val</span> employeeRepo : <span class="tp">EmployeeRepository</span>
+) : <span class="tp">ViewModel</span>() {
+
+    <span class="cm">// Private mutable state</span>
+    <span class="kw">private val</span> _state = <span class="tp">MutableStateFlow</span>(<span class="tp">CheckInUiState</span>())
+    <span class="cm">// Public read-only state</span>
+    <span class="kw">val</span> state: <span class="tp">StateFlow</span>&lt;<span class="tp">CheckInUiState</span>&gt; = _state.<span class="fn">asStateFlow</span>()
+
+    <span class="kw">fun</span> <span class="fn">submit</span>() {
+        <span class="kw">val</span> s  = _state.value
+        <span class="kw">val</span> km = s.odometerKm.<span class="fn">toIntOrNull</span>()
+        <span class="cm">// Validate before calling repository</span>
+        <span class="kw">when</span> {
+            s.registration.<span class="fn">isBlank</span>() -> { <span class="fn">err</span>(<span class="str">"Reg required"</span>); <span class="kw">return</span> }
+            km == <span class="kw">null</span> || km <= <span class="nu">0</span>    -> { <span class="fn">err</span>(<span class="str">"Valid km required"</span>); <span class="kw">return</span> }
+            s.condition == <span class="kw">null</span>       -> { <span class="fn">err</span>(<span class="str">"Select condition"</span>); <span class="kw">return</span> }
+        }
+        viewModelScope.<span class="fn">launch</span> { <span class="cm">// coroutine on main</span>
+            vehicleRepo.<span class="fn">checkInVehicle</span>(...)
+        }
+    }
+
+    <span class="kw">private fun</span> <span class="fn">err</span>(msg: <span class="tp">String</span>) =
+        _state.<span class="fn">update</span> { it.<span class="fn">copy</span>(error = msg) }
+}</pre>
+    </div>
+    <div>
+      <h3>If ViewModel is removed — what breaks?</h3>
+      <div class="card" style="margin-bottom:10px;border-color:#dc2626">
+        <p><strong>❌ Form state lost on rotation</strong><br>Without ViewModel, all the text in the Check-In form (registration, odometer, condition) is destroyed when the screen rotates. ViewModel survives configuration changes.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px;border-color:#dc2626">
+        <p><strong>❌ DB calls on the main thread</strong><br>Without ViewModel + viewModelScope, you'd call the repository from the Activity's <code>onCreate()</code>. Room would crash with a "Cannot access database on the main thread" exception.</p>
+      </div>
+      <div class="card" style="margin-bottom:10px;border-color:#dc2626">
+        <p><strong>❌ No separation of concerns</strong><br>All validation logic, all business rules, all state management would be dumped into the Composable or Activity — unmaintainable.</p>
+      </div>
+      <div class="answer-box">
+        <p><strong>ViewModel survives</strong>: screen rotation, going back and forward in navigation, system killing background processes. The data stays. The coroutines have a proper scope. This is why it exists.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 12 – STATEFLOW VS LIVEDATA -->
+<section class="slide" id="s12">
+  <div class="slide-num">12 / 22</div>
+  <div class="tag">Exam Question — State Management</div>
+  <div class="question-box"><p>❓ "What is the difference between LiveData and StateFlow? Which did you use? Show it in your code."</p></div>
+  <h2>StateFlow vs <span>LiveData</span></h2>
+  <div class="two-col">
+    <div>
+      <table>
+        <tr>
+          <th></th>
+          <th>LiveData</th>
+          <th>StateFlow</th>
+        </tr>
+        <tr>
+          <td><strong>Origin</strong></td>
+          <td>Android lifecycle library</td>
+          <td>Kotlin Coroutines</td>
+        </tr>
+        <tr>
+          <td><strong>Platform</strong></td>
+          <td>Android only</td>
+          <td>Pure Kotlin (multiplatform)</td>
+        </tr>
+        <tr>
+          <td><strong>Initial value</strong></td>
+          <td>Can be null</td>
+          <td>Always has a value</td>
+        </tr>
+        <tr>
+          <td><strong>Thread safety</strong></td>
+          <td>Only main thread</td>
+          <td>Any thread (coroutine-safe)</td>
+        </tr>
+        <tr>
+          <td><strong>Compose support</strong></td>
+          <td>Needs <code>.observeAsState()</code></td>
+          <td>Native <code>.collectAsState()</code></td>
+        </tr>
+        <tr>
+          <td><strong>Testing</strong></td>
+          <td>Needs InstantTaskExecutor rule</td>
+          <td>Standard coroutine test dispatcher</td>
+        </tr>
+        <tr>
+          <td><strong>We used</strong></td>
+          <td>❌ No</td>
+          <td><strong>✅ Yes — everywhere</strong></td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <pre><span class="cm">// How we expose state in every ViewModel:</span>
+
+<span class="cm">// 1. Private MUTABLE — only ViewModel writes</span>
+<span class="kw">private val</span> _state =
+    <span class="tp">MutableStateFlow</span>(<span class="tp">DashboardUiState</span>())
+
+<span class="cm">// 2. Public READ-ONLY — screens observe this</span>
+<span class="kw">val</span> uiState: <span class="tp">StateFlow</span>&lt;<span class="tp">DashboardUiState</span>&gt; =
+    _state.<span class="fn">asStateFlow</span>()
+
+<span class="cm">// Alternative: convert a DB Flow directly</span>
+<span class="kw">val</span> uiState: <span class="tp">StateFlow</span>&lt;<span class="tp">DashboardUiState</span>&gt; =
+    repo.allVehiclesWithTasks
+        .<span class="fn">map</span> { <span class="tp">DashboardUiState</span>(vehicles = it) }
+        .<span class="fn">stateIn</span>(
+            scope    = viewModelScope,
+            started  = <span class="tp">SharingStarted</span>.<span class="fn">WhileSubscribed</span>(<span class="nu">5_000</span>),
+            initialValue = <span class="tp">DashboardUiState</span>()
+        )
+
+<span class="cm">// In the Composable screen:</span>
+<span class="kw">val</span> state <span class="kw">by</span> vm.uiState.<span class="fn">collectAsState</span>()
+<span class="cm">// 'by' delegate means 'state' is a DashboardUiState</span>
+<span class="cm">// Screen auto-recomposes when state changes</span></pre>
+      <div class="answer-box">
+        <p><strong>WhileSubscribed(5_000)</strong>: upstream Flow stays active for 5 seconds after the last subscriber disappears. Prevents unnecessary work when switching screens, but resumes quickly if the user comes back.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 13 – LAMBDAS -->
+<section class="slide" id="s13">
+  <div class="slide-num">13 / 22</div>
+  <div class="tag">Exam Question — Lambda Expressions</div>
+  <div class="question-box"><p>❓ "What is a Lambda expression? Show me from your code."</p></div>
+  <h2>Lambda Expressions — <span>Everywhere</span></h2>
+  <p>A lambda is an <strong>anonymous function</strong> — a function without a name, passed as a value. In Kotlin, lambdas are written inside <code>{ }</code>.</p>
+  <div class="two-col" style="margin-top:14px">
+    <div>
+      <h3>In Repositories — .map { } and .filter { }</h3>
+      <pre><span class="cm">// Lambda: transform each VehicleWithTasks</span>
+<span class="cm">// into a DashboardUiState</span>
+repo.allVehiclesWithTasks
+    .<span class="fn">map</span> { vehicles ->  <span class="cm">// ← lambda</span>
+        <span class="tp">DashboardUiState</span>(
+            vehicles  = vehicles,
+            isLoading = <span class="kw">false</span>
+        )
+    }
+
+<span class="cm">// Lambda: filter out managers</span>
+list.<span class="fn">filter</span> { e -> e.role != <span class="tp">EmployeeRole</span>.MANAGER }
+
+<span class="cm">// Lambda: count completed tasks</span>
+vt.tasks.<span class="fn">count</span> { it.isCompleted }
+
+<span class="cm">// Lambda: build distinct vehicle list</span>
+tasks.<span class="fn">map</span> { it.vehicleId }.<span class="fn">distinct</span>().<span class="fn">size</span>
+
+<span class="cm">// Lambda in buildChecklist:</span>
+<span class="kw">val</span> extra = <span class="kw">when</span> (condition) {
+    CRITICAL -> <span class="fn">listOf</span>(
+        <span class="fn">task</span>(vehicleId, <span class="str">"OBD-II scan"</span>, DIAG)
+    )
+    FAIR -> <span class="fn">listOf</span>(<span class="fn">task</span>(vehicleId, <span class="str">"OBD-II scan"</span>, DIAG))
+    GOOD -> <span class="fn">emptyList</span>()
+}</pre>
+    </div>
+    <div>
+      <h3>In ViewModels — .update { } and .launch { }</h3>
+      <pre><span class="cm">// Lambda: update state immutably</span>
+_state.<span class="fn">update</span> { it.<span class="fn">copy</span>(registration = v.<span class="fn">uppercase</span>()) }
+<span class="cm">//             ↑ 'it' = current state, lambda</span>
+<span class="cm">//               returns the new state</span>
+
+<span class="cm">// Lambda: coroutine body</span>
+viewModelScope.<span class="fn">launch</span> {
+    vehicleRepo.<span class="fn">checkInVehicle</span>(...)
+}
+
+<span class="cm">// In Compose screens — trailing lambda syntax:</span>
+<span class="tp">Button</span>(
+    onClick = { vm.<span class="fn">submit</span>() } <span class="cm">// ← lambda</span>
+) {
+    <span class="tp">Text</span>(<span class="str">"Complete Check-In"</span>) <span class="cm">// ← trailing lambda</span>
+}
+
+<span class="cm">// Lambda with it shorthand:</span>
+<span class="tp">LaunchedEffect</span>(state.success) {
+    state.success?.<span class="fn">let</span> {  <span class="cm">// ← 'it' = success message</span>
+        snack.<span class="fn">showSnackbar</span>(it)
+        vm.<span class="fn">clearMessages</span>()
+    }
+}</pre>
+      <div class="answer-box">
+        <p>The <strong>trailing lambda syntax</strong> in Kotlin means if the last parameter of a function is a lambda, it can be written outside the parentheses. This is how all Composable layouts work: <code>Column { ... }</code> is a function call where the block <code>{ ... }</code> is the trailing lambda.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 14 – UDF -->
+<section class="slide" id="s14">
+  <div class="slide-num">14 / 22</div>
+  <div class="tag">Architecture Pattern</div>
+  <h2>Unidirectional Data Flow <span>(UDF)</span></h2>
+  <p>State flows <strong>down</strong> from ViewModel to Screen. Events flow <strong>up</strong> from Screen to ViewModel. The screen never modifies state directly.</p>
+  <div class="two-col" style="margin-top:20px">
+    <div>
+      <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:20px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2.2">
+        <div style="text-align:center;color:#fca5a5;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:8px">CheckInViewModel</div>
+        <div style="background:rgba(232,66,26,0.1);border:1px solid rgba(232,66,26,0.2);border-radius:8px;padding:10px;margin-bottom:6px">
+          <span style="color:#fca5a5">StateFlow&lt;CheckInUiState&gt;</span><br>
+          <span style="color:#8b949e">↓ .collectAsState()</span>
+        </div>
+        <div style="text-align:center;color:#8b949e">↓ state flows DOWN ↓</div>
+        <div style="background:rgba(26,86,219,0.1);border:1px solid rgba(26,86,219,0.2);border-radius:8px;padding:10px;margin:6px 0">
+          <span style="color:#93c5fd">CheckInScreen (Composable)</span><br>
+          <span style="color:#8b949e">renders state, user types/taps</span>
+        </div>
+        <div style="text-align:center;color:#8b949e">↑ events flow UP ↑</div>
+        <div style="background:rgba(22,163,74,0.1);border:1px solid rgba(22,163,74,0.2);border-radius:8px;padding:10px;margin-top:6px">
+          <span style="color:#86efac">vm.onRegChange("N 4521 WH")</span><br>
+          <span style="color:#86efac">vm.submit()</span>
+        </div>
+      </div>
+    </div>
+    <div>
+      <pre><span class="cm">// CheckInScreen.kt — screen reads state down</span>
+<span class="kw">val</span> state <span class="kw">by</span> vm.state.<span class="fn">collectAsState</span>()
+
+<span class="tp">OutlinedTextField</span>(
+    <span class="cm">// State flows DOWN — screen shows current value</span>
+    value         = state.registration,
+    <span class="cm">// Event flows UP — user types, VM updates state</span>
+    onValueChange = vm::onRegChange
+)
+
+<span class="tp">Button</span>(onClick = vm::submit) {
+    <span class="tp">Text</span>(<span class="str">"Complete Check-In"</span>)
+}
+
+<span class="cm">// CheckInViewModel.kt — handles the event</span>
+<span class="kw">fun</span> <span class="fn">onRegChange</span>(v: <span class="tp">String</span>) =
+    _state.<span class="fn">update</span> { it.<span class="fn">copy</span>(registration = v.<span class="fn">uppercase</span>()) }
+<span class="cm">// ↑ This triggers StateFlow emission</span>
+<span class="cm">// ↑ Screen recomposes automatically</span>
+<span class="cm">// Screen never modifies _state directly</span></pre>
+      <div class="answer-box">
+        <p><strong>Why UDF?</strong> There is only one place where state is modified (the ViewModel). This means you can always reason about what the screen will look like by looking at one object: the current <code>UiState</code>. No hidden state, no race conditions between UI components.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 15 – SCREENS -->
+<section class="slide" id="s15">
+  <div class="slide-num">15 / 22</div>
+  <div class="tag">UI Layer — All Screens</div>
+  <h2>Five Composable <span>Screens</span></h2>
+  <div class="three-col">
+    <div class="card">
+      <span class="badge badge-red">Dashboard</span>
+      <p style="margin-top:8px"><strong>DashboardScreen.kt</strong><br>Observes <code>DashboardViewModel.uiState</code>. Shows total / active / completed stats and a card per active vehicle with progress bars. No writes — read-only view of DB state.</p>
+    </div>
+    <div class="card">
+      <span class="badge badge-amber">Check-In</span>
+      <p style="margin-top:8px"><strong>CheckInScreen.kt</strong><br>Form screen. Each input field calls a ViewModel handler. Submission triggers validation then <code>vehicleRepo.checkInVehicle()</code>. Condition/priority use <code>ExposedDropdownMenuBox</code>.</p>
+    </div>
+    <div class="card">
+      <span class="badge badge-blue">Service Board</span>
+      <p style="margin-top:8px"><strong>ServiceBoardScreen.kt</strong><br>One card per active vehicle. Each task has a Checkbox. Ticking opens <code>CompleteTaskDialog</code> — mechanic picks their name + writes notes. Core anti-duplication feature.</p>
+    </div>
+  </div>
+  <div class="two-col" style="margin-top:14px">
+    <div class="card">
+      <span class="badge badge-green">Reports</span>
+      <p style="margin-top:8px"><strong>ReportsScreen.kt</strong><br>Two-tab screen. Tab 1: Employee Activity — shows each mechanic's completion %, tasks done, vehicles worked on. Tab 2: Vehicle Log — shows every vehicle's check-in condition and odometer. This is Valentine's management view fulfilling requirement ③.</p>
+    </div>
+    <div class="card">
+      <span class="badge badge-purple">Employees</span>
+      <p style="margin-top:8px"><strong>EmployeesScreen.kt</strong><br>Simple roster. Lists all 6 seeded employees with their role and active status. Initials avatar generated from name. Uses <code>EmployeesViewModel</code> backed by <code>EmployeeRepository.allEmployees</code>.</p>
+    </div>
+  </div>
+  <div style="margin-top:12px">
+    <p><strong>Navigation (NavHost.kt):</strong> Uses sealed class <code>Screen</code> with <code>route</code>, <code>label</code>, and <code>icon</code> properties. <code>popUpTo</code> with <code>saveState = true</code> restores each screen's state when navigating back to it via the bottom bar.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 16 – SINGLE SOURCE OF TRUTH -->
+<section class="slide" id="s16">
+  <div class="slide-num">16 / 22</div>
+  <div class="tag">Exam Question — Single Source of Truth</div>
+  <div class="question-box"><p>❓ "What is the significance of having a Single Source of Truth and how is it reflected in your code?"</p></div>
+  <h2>Single Source of <span>Truth</span></h2>
+  <div class="two-col">
+    <div>
+      <h3>What it means</h3>
+      <p style="margin-bottom:12px">There is <strong>exactly one place</strong> where data lives. All other parts of the app read from that one place. Nobody keeps their own copy.</p>
+      <div class="card accent" style="margin-bottom:10px">
+        <p><strong>In our app: the Room database is the single source of truth.</strong></p>
+      </div>
+      <h3 style="margin-top:14px">How it's reflected</h3>
+      <pre><span class="cm">// VehicleRepository exposes ONE Flow</span>
+<span class="cm">// that every screen reads from:</span>
+<span class="kw">val</span> allVehiclesWithTasks: <span class="tp">Flow</span>&lt;<span class="tp">List</span>&lt;<span class="tp">VehicleWithTasks</span>&gt;&gt; =
+    vehicleDao.<span class="fn">getAllWithTasks</span>()
+
+<span class="cm">// Dashboard reads it:</span>
+repo.allVehiclesWithTasks.<span class="fn">map</span> { ... }
+
+<span class="cm">// Service Board reads it:</span>
+repo.allVehiclesWithTasks.<span class="fn">combine</span>(...) { ... }
+
+<span class="cm">// Reports reads it:</span>
+<span class="fn">combine</span>(
+    employeeRepo.<span class="fn">getEmployeeReports</span>(),
+    vehicleRepo.allVehiclesWithTasks
+) { rpts, veh -> ... }</pre>
+    </div>
+    <div>
+      <h3>What happens without it?</h3>
+      <div class="card" style="border-color:#dc2626;margin-bottom:10px">
+        <p><strong>Problem: two screens cache their own lists</strong><br>Dashboard has a list of 7 vehicles. ServiceBoard has a list of 7 vehicles. Mechanic completes a task on the Service Board. Dashboard still shows the old data. The user sees inconsistency.</p>
+      </div>
+      <div class="card green-card">
+        <p><strong>Solution: Room + Flow</strong><br>When a mechanic calls <code>vm.completeTask()</code>, it calls <code>serviceTaskDao.update()</code>. Room detects the change and re-emits the new data through <code>getAllWithTasks()</code> Flow. Both Dashboard and Service Board recompose simultaneously with the correct data — no manual refresh needed.</p>
+      </div>
+      <div class="answer-box" style="margin-top:12px">
+        <p><strong>The check-in record is permanently immutable</strong>: <code>odometerAtCheckin</code> and <code>conditionAtCheckin</code> are written once and never updated. This makes the single source of truth trustworthy as an audit record — it is the ground truth for vehicle condition at arrival.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 17 – NO ACTIVITY DB QUERIES -->
+<section class="slide" id="s17">
+  <div class="slide-num">17 / 22</div>
+  <div class="tag">Exam Question — Activity vs Architecture</div>
+  <div class="question-box"><p>❓ "Why is it bad practice to put database queries directly inside an Activity? Give an example from the code. Do you need Activity files?"</p></div>
+  <h2>No DB Queries in <span>Activities</span></h2>
+  <div class="code-split">
+    <div>
+      <h3 style="color:#fca5a5">❌ BAD PRACTICE — What NOT to do</h3>
+      <pre><span class="cm">// Hypothetical bad code:</span>
+<span class="kw">class</span> <span class="tp">BadCheckInActivity</span> : <span class="tp">AppCompatActivity</span>() {
+
+    <span class="kw">override fun</span> <span class="fn">onCreate</span>(...) {
+        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
+
+        <span class="cm">// ❌ Problem 1: CRASH — Room forbids</span>
+        <span class="cm">// database access on the main thread</span>
+        <span class="kw">val</span> vehicles = db.vehicleDao().<span class="fn">getAllWithTasks</span>()
+
+        <span class="cm">// ❌ Problem 2: data is LOST on rotation</span>
+        <span class="cm">// onCreate() runs again, re-queries</span>
+
+        <span class="cm">// ❌ Problem 3: untestable — you cannot</span>
+        <span class="cm">// unit-test an Activity without a device</span>
+
+        <span class="cm">// ❌ Problem 4: no separation of concerns</span>
+        <span class="cm">// DB logic + UI logic + lifecycle all mixed</span>
+        binding.btnCheckin.<span class="fn">setOnClickListener</span> {
+            db.vehicleDao().<span class="fn">insert</span>(...)  <span class="cm">// crash</span>
+        }
+    }
+}</pre>
+    </div>
+    <div>
+      <h3 style="color:#86efac">✅ How we actually do it</h3>
+      <pre><span class="cm">// MainActivity.kt — our only activity:</span>
+<span class="an">@AndroidEntryPoint</span>
+<span class="kw">class</span> <span class="tp">MainActivity</span> : <span class="tp">ComponentActivity</span>() {
+    <span class="kw">override fun</span> <span class="fn">onCreate</span>(...) {
+        <span class="kw">super</span>.<span class="fn">onCreate</span>(savedInstanceState)
+        <span class="fn">enableEdgeToEdge</span>()
+        <span class="fn">setContent</span> {
+            <span class="tp">ValentinesGarageTheme</span> {
+                <span class="tp">GarageNavHost</span>() <span class="cm">// hand off to Compose</span>
+            }
+        }
+    }
+    <span class="cm">// That's it. No DB calls. No business logic.</span>
+    <span class="cm">// The Activity's ONLY job is to host Compose.</span>
+}</pre>
+      <div class="card green-card" style="margin-top:12px">
+        <p><strong>Do we need Activity files?</strong><br>We need exactly <strong>one Activity</strong> — <code>MainActivity</code> — as required by Android to launch the app. Beyond that, we use zero Fragment files and zero additional Activities. All screens are Composable functions. This is the recommended single-activity architecture.</p>
+      </div>
+      <div class="answer-box">
+        <p>Database queries live in <strong>DAOs</strong>. Business logic lives in <strong>Repositories</strong>. Coroutines run in <strong>ViewModels</strong>. The Activity only renders Compose.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 18 – CIRCULAR DEPS -->
+<section class="slide" id="s18">
+  <div class="slide-num">18 / 22</div>
+  <div class="tag">Exam Question — Circular Dependencies</div>
+  <div class="question-box"><p>❓ "How did you avoid circular dependencies between your modules or packages?"</p></div>
+  <h2>Avoiding <span>Circular Dependencies</span></h2>
+  <div class="two-col">
+    <div>
+      <h3>Dependency Direction Rule</h3>
+      <p style="margin-bottom:14px">Dependencies only point in <strong>one direction</strong>: UI → Repository → DAO → Database. No layer imports from the layer above it.</p>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:12px;line-height:2.2;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px">
+        <span style="color:#fca5a5">ui.dashboard.DashboardViewModel</span><br>
+        &nbsp;&nbsp;&nbsp;↓ imports<br>
+        <span style="color:#d2a8ff">data.repository.VehicleRepository</span><br>
+        &nbsp;&nbsp;&nbsp;↓ imports<br>
+        <span style="color:#79c0ff">data.local.VehicleDao</span><br>
+        &nbsp;&nbsp;&nbsp;↓ imports<br>
+        <span style="color:#86efac">data.model.Vehicle</span><br>
+        <br>
+        <span style="color:#8b949e">No arrows go back UP ↑</span><br>
+        <span style="color:#8b949e">No layer knows about the layer above</span>
+      </div>
+      <div class="card" style="margin-top:14px;border-color:#dc2626">
+        <p><strong>❌ Circular = Repository imports ViewModel</strong><br>This would mean: A needs B to start, B needs A to start → neither can start. Hilt would throw a compile-time error.</p>
+      </div>
+    </div>
+    <div>
+      <h3>Package structure enforces this</h3>
+      <pre><span class="cm">// ✅ VehicleRepository only imports from</span>
+<span class="cm">// data.local (below it) and data.model (below it)</span>
+<span class="kw">import</span> com.valentinesgarage.data.local.VehicleDao
+<span class="kw">import</span> com.valentinesgarage.data.local.ServiceTaskDao
+<span class="kw">import</span> com.valentinesgarage.data.model.*
+<span class="cm">// NO imports from ui.* — repository does NOT</span>
+<span class="cm">// know about ViewModels or screens</span>
+
+<span class="cm">// ✅ VehicleDao only imports from data.model</span>
+<span class="kw">import</span> com.valentinesgarage.data.model.Vehicle
+<span class="kw">import</span> com.valentinesgarage.data.model.VehicleWithTasks
+<span class="cm">// NO imports from repository.* or ui.*</span>
+
+<span class="cm">// ✅ data.model has NO imports from any</span>
+<span class="cm">// other package in the project — it's the base</span></pre>
+      <div class="answer-box" style="margin-top:12px">
+        <p><strong>Hilt also enforces this at runtime:</strong> if you create a circular dependency (A → B → A), Hilt will throw a <code>CyclicDependencyException</code> at build time, not runtime. The dependency graph is validated when you compile.</p>
+        <p style="margin-top:8px"><strong>di package is separate:</strong> The <code>DatabaseModule</code> and <code>SeedModule</code> live in their own <code>di/</code> package. They <em>know about</em> both layers (they wire them together), but neither layer knows about <code>di/</code>. This is the Dependency Inversion Principle.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 19 – COROUTINES -->
+<section class="slide" id="s19">
+  <div class="slide-num">19 / 22</div>
+  <div class="tag">Exam Question — Coroutines</div>
+  <div class="question-box"><p>❓ "What is a Coroutine Test Dispatcher?"</p></div>
+  <h2>Coroutines in <span>Our App</span></h2>
+  <div class="code-split">
+    <div>
+      <h3>How coroutines are used</h3>
+      <pre><span class="cm">// 1. In ViewModels: viewModelScope.launch</span>
+<span class="cm">// Runs on Main dispatcher by default</span>
+viewModelScope.<span class="fn">launch</span> {
+    vehicleRepo.<span class="fn">checkInVehicle</span>(...)
+    <span class="cm">// UI updates happen after this</span>
+}
+
+<span class="cm">// 2. Room DAOs: suspend functions</span>
+<span class="an">@Insert</span>
+<span class="kw">suspend fun</span> <span class="fn">insert</span>(v: <span class="tp">Vehicle</span>): <span class="tp">Long</span>
+<span class="cm">// suspend = can pause without blocking the thread</span>
+<span class="cm">// Room automatically switches to IO dispatcher</span>
+
+<span class="cm">// 3. In DatabaseSeeder: IO dispatcher</span>
+<span class="tp">CoroutineScope</span>(<span class="tp">Dispatchers</span>.IO).<span class="fn">launch</span> {
+    <span class="kw">if</span> (employeeDao.<span class="fn">count</span>() == <span class="nu">0</span>) {
+        employeeDao.<span class="fn">insertAll</span>(defaultEmployees)
+    }
+}
+<span class="cm">// Dispatchers.IO = background thread pool</span>
+<span class="cm">// for database and network operations</span>
+
+<span class="cm">// 4. Flow.first() in EmployeeRepository</span>
+<span class="kw">val</span> tasks = serviceTaskDao
+    .<span class="fn">getByMechanic</span>(emp.id).<span class="fn">first</span>()
+<span class="cm">// .first() = suspend, takes one emission</span></pre>
+    </div>
+    <div>
+      <h3>The Three Dispatchers</h3>
+      <table>
+        <tr><th>Dispatcher</th><th>Use case</th></tr>
+        <tr><td><code>Dispatchers.Main</code></td><td>UI updates, <code>viewModelScope</code> default</td></tr>
+        <tr><td><code>Dispatchers.IO</code></td><td>Database, file I/O, network</td></tr>
+        <tr><td><code>Dispatchers.Default</code></td><td>CPU-intensive computation</td></tr>
+      </table>
+      <div class="divider"></div>
+      <h3>Coroutine Test Dispatcher</h3>
+      <pre><span class="cm">// In unit tests, you replace the real</span>
+<span class="cm">// dispatcher with a TestCoroutineDispatcher</span>
+<span class="cm">// (or StandardTestDispatcher in newer coroutines)</span>
+
+<span class="cm">// This makes coroutines run synchronously</span>
+<span class="cm">// in tests — no timing issues</span>
+
+<span class="kw">val</span> testDispatcher = <span class="tp">StandardTestDispatcher</span>()
+
+<span class="an">@Test</span>
+<span class="kw">fun</span> `<span class="fn">valid odometer passes</span>`() {
+    <span class="cm">// Our unit tests don't need a test dispatcher</span>
+    <span class="cm">// because they test pure functions (no coroutines)</span>
+    <span class="fn">assertTrue</span>(<span class="fn">validKm</span>(<span class="str">"128450"</span>))
+}
+<span class="cm">// A TestCoroutineDispatcher WOULD be needed</span>
+<span class="cm">// if we tested ViewModel.submit() directly</span></pre>
+      <div class="answer-box">
+        <p><strong>TestCoroutineDispatcher / StandardTestDispatcher</strong>: in tests, coroutines run eagerly (synchronously). Without it, <code>launch { }</code> bodies may not execute before your assertions run, giving false test failures.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 20 – RUBRIC -->
+<section class="slide" id="s20">
+  <div class="slide-num">20 / 22</div>
+  <div class="tag">Assessment</div>
+  <h2>Rubric — <span>How We Score</span></h2>
+  <table style="margin-top:14px">
+    <tr>
+      <th>Criterion</th>
+      <th>Max</th>
+      <th>What we did</th>
+      <th>Files</th>
+    </tr>
+    <tr>
+      <td><strong>App Architecture</strong></td>
+      <td><span class="badge badge-green">20</span></td>
+      <td>Three-layer MVVM (UI / Repository / Data). Separate packages for each concern. Resource files in <code>res/values/</code>. Single-activity architecture.</td>
+      <td><code>di/</code>, <code>data/</code>, <code>ui/</code></td>
+    </tr>
+    <tr>
+      <td><strong>Code</strong></td>
+      <td><span class="badge badge-green">20</span></td>
+      <td>KDoc comments on key classes. Single-responsibility functions. Immutable data classes. Unit tests: 11 tests covering validation boundary values and report calculations. Readable naming conventions.</td>
+      <td><code>CheckInValidationTest.kt</code>, <code>EmployeeReportTest.kt</code></td>
+    </tr>
+    <tr>
+      <td><strong>Functionality</strong></td>
+      <td><span class="badge badge-green">20</span></td>
+      <td>① Truck check-in permanently records odometer + condition. ② Collaborative service board — every task tick requires mechanic attribution + notes. ③ Reports show per-employee activity and vehicle condition log.</td>
+      <td>All 5 screens</td>
+    </tr>
+    <tr>
+      <td><strong>UI & Navigation</strong></td>
+      <td><span class="badge badge-green">20</span></td>
+      <td>Material 3 design. Bottom navigation bar. Modal dialogs for task completion. Snackbar feedback. Progress indicators. Condition badges (Good/Fair/Critical). FilterChips for condition selection. ExposedDropdownMenuBox.</td>
+      <td><code>NavHost.kt</code>, <code>SharedComponents.kt</code>, screen files</td>
+    </tr>
+    <tr>
+      <td><strong>Presentation</strong></td>
+      <td><span class="badge badge-green">20</span></td>
+      <td>Team of four. Each member owns one feature module (Dashboard+Models, CheckIn, ServiceBoard, Reports+Employees). Q&A prepared with code examples for every likely question.</td>
+      <td>This slide deck</td>
+    </tr>
+  </table>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 21 – SCREENSHOTS -->
+<section class="slide" id="s21">
+  <div class="slide-num">21 / 22</div>
+  <div class="tag">Running App</div>
+  <h2>App in <span>Action</span></h2>
+  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-top:16px">
+    <div class="card" style="padding:12px;text-align:center">
+      <div style="background:rgba(232,66,26,0.1);border-radius:8px;padding:10px;margin-bottom:8px;font-size:28px">📊</div>
+      <strong style="font-size:13px">Dashboard</strong>
+      <p style="font-size:11px;margin-top:4px">2 active vehicles shown. Stats cards. Progress bars per vehicle. Condition badges.</p>
+    </div>
+    <div class="card" style="padding:12px;text-align:center">
+      <div style="background:rgba(26,86,219,0.1);border-radius:8px;padding:10px;margin-bottom:8px;font-size:28px">🚚</div>
+      <strong style="font-size:13px">Check-In</strong>
+      <p style="font-size:11px;margin-top:4px">Form with reg number, km, condition chips, mechanic dropdown. Info banner explains why km is recorded.</p>
+    </div>
+    <div class="card" style="padding:12px;text-align:center">
+      <div style="background:rgba(217,119,6,0.1);border-radius:8px;padding:10px;margin-bottom:8px;font-size:28px">✅</div>
+      <strong style="font-size:13px">Service Board</strong>
+      <p style="font-size:11px;margin-top:4px">Checklist per vehicle. 3 of 8 tasks ticked. Each completed task shows who did it. Add Task button.</p>
+    </div>
+    <div class="card" style="padding:12px;text-align:center">
+      <div style="background:rgba(22,163,74,0.1);border-radius:8px;padding:10px;margin-bottom:8px;font-size:28px">📋</div>
+      <strong style="font-size:13px">Reports</strong>
+      <p style="font-size:11px;margin-top:4px">Employee Activity tab. Green 100% for Absalom and Festus. Progress bars. Tab 2 shows Vehicle Log.</p>
+    </div>
+    <div class="card" style="padding:12px;text-align:center">
+      <div style="background:rgba(139,92,246,0.1);border-radius:8px;padding:10px;margin-bottom:8px;font-size:28px">👥</div>
+      <strong style="font-size:13px">Employees</strong>
+      <p style="font-size:11px;margin-top:4px">All 6 seeded staff. Initials avatars. Role labels. Active badges. Seeded on first launch via DatabaseSeeder.</p>
+    </div>
+  </div>
+  <div class="answer-box" style="margin-top:18px">
+    <p><strong>All three assignment requirements are visible in these screenshots:</strong> ① Dashboard shows odometer + condition from check-in (anti-misuse baseline) · ② Service Board shows collaborative task ticking with mechanic attribution · ③ Reports shows Valentine's per-employee activity view</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════ SLIDE 22 – Q&A CHEAT SHEET -->
+<section class="slide" id="s22">
+  <div class="slide-num">22 / 22</div>
+  <div class="tag">Exam Preparation</div>
+  <h2>Quick Reference — <span>Q&A Answers</span></h2>
+  <div class="two-col">
+    <div>
+      <table>
+        <tr><th>Question</th><th>One-Line Answer</th><th>Slide</th></tr>
+        <tr>
+          <td>Singleton vs Scoped?</td>
+          <td>Singleton = one for whole app (DB, Repositories). ViewModelScoped = one per screen (ViewModels)</td>
+          <td><a href="#s10" style="color:var(--red2)">10</a></td>
+        </tr>
+        <tr>
+          <td>Circular dependencies?</td>
+          <td>Prevented by unidirectional imports: UI→Repository→DAO→Model. No layer imports from above.</td>
+          <td><a href="#s18" style="color:var(--red2)">18</a></td>
+        </tr>
+        <tr>
+          <td>Single source of truth?</td>
+          <td>Room DB is the only place data lives. All screens read from the same Flow. Room pushes updates automatically.</td>
+          <td><a href="#s16" style="color:var(--red2)">16</a></td>
+        </tr>
+        <tr>
+          <td>Data classes?</td>
+          <td>Vehicle, ServiceTask, Employee, VehicleWithTasks, EmployeeReport, all UiState holders. Used copy() for immutable updates.</td>
+          <td><a href="#s6" style="color:var(--red2)">6</a></td>
+        </tr>
+        <tr>
+          <td>How many layers?</td>
+          <td>3: UI (Composables+ViewModels), Repository (business logic), Data (Room+DAOs+Models)</td>
+          <td><a href="#s3" style="color:var(--red2)">3</a></td>
+        </tr>
+        <tr>
+          <td>DB queries in Activity?</td>
+          <td>Bad: crashes on main thread, lost on rotation, untestable. Our Activity only calls setContent{}.</td>
+          <td><a href="#s17" style="color:var(--red2)">17</a></td>
+        </tr>
+        <tr>
+          <td>Lambda expressions?</td>
+          <td>.map{}, .filter{}, .count{}, .update{it.copy()}, onClick={}, viewModelScope.launch{}</td>
+          <td><a href="#s13" style="color:var(--red2)">13</a></td>
+        </tr>
+        <tr>
+          <td>Remove ViewModel?</td>
+          <td>Form state lost on rotation. DB calls on main thread → crash. No separation of concerns.</td>
+          <td><a href="#s11" style="color:var(--red2)">11</a></td>
+        </tr>
+        <tr>
+          <td>Coroutine Test Dispatcher?</td>
+          <td>Replaces real dispatcher in tests so coroutines run synchronously. Our tests use pure functions so it's not needed, but for ViewModel tests it would be.</td>
+          <td><a href="#s19" style="color:var(--red2)">19</a></td>
+        </tr>
+        <tr>
+          <td>Architecture used?</td>
+          <td>MVVM with Repository pattern (Clean Architecture layers). Unidirectional Data Flow.</td>
+          <td><a href="#s3" style="color:var(--red2)">3</a></td>
+        </tr>
+        <tr>
+          <td>LiveData vs StateFlow?</td>
+          <td>StateFlow: Kotlin-native, always has value, coroutine-safe, native Compose support. We used StateFlow everywhere.</td>
+          <td><a href="#s12" style="color:var(--red2)">12</a></td>
+        </tr>
+      </table>
+    </div>
+    <div>
+      <h3>Code references to have ready</h3>
+      <div class="card" style="margin-bottom:10px">
+        <p><span class="badge badge-red">@Singleton</span> — <code>VehicleRepository.kt</code> line 1: <code>@Singleton class VehicleRepository</code></p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <p><span class="badge badge-blue">StateFlow</span> — <code>DashboardViewModel.kt</code>: <code>val uiState: StateFlow&lt;DashboardUiState&gt; = repo...stateIn(...)</code></p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <p><span class="badge badge-green">Lambda</span> — <code>CheckInViewModel.kt</code>: <code>_state.update { it.copy(registration = v.uppercase()) }</code></p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <p><span class="badge badge-amber">data class</span> — <code>Vehicle.kt</code>: <code>data class Vehicle(...)</code> + <code>task.copy(isCompleted = true)</code> in <code>VehicleRepository.kt</code></p>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <p><span class="badge badge-purple">No DB in Activity</span> — <code>MainActivity.kt</code>: only 3 lines of logic, just calls <code>setContent { GarageNavHost() }</code></p>
+      </div>
+      <div class="card">
+        <p><span class="badge badge-red">Circular deps</span> — open any repository file: it imports from <code>data.local.*</code> and <code>data.model.*</code> only. Never from <code>ui.*</code>.</p>
+      </div>
+      <div class="answer-box" style="margin-top:12px">
+        <p><strong>MAP711S · Valentine's Garage · NUST · Kotlin + Jetpack Compose</strong></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

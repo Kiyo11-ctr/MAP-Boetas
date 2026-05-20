@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinesgarage.data.model.*
+import com.valentinesgarage.ui.auth.AuthViewModel
 import com.valentinesgarage.ui.components.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -27,7 +28,10 @@ import java.time.format.DateTimeFormatter
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen(viewModel: DashboardViewModel = hiltViewModel()) {
+fun DashboardScreen(
+    viewModel: DashboardViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel()
+) {
     val uiState by viewModel.uiState.collectAsState()
 
     if (uiState.isLoading) { LoadingScreen(); return }
@@ -43,6 +47,11 @@ fun DashboardScreen(viewModel: DashboardViewModel = hiltViewModel()) {
                     Column {
                         Text(stringResource(R.string.title_dashboard), fontWeight = FontWeight.Bold)
                         Text(today, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = authViewModel::logout) {
+                        Icon(Icons.Default.Logout, contentDescription = stringResource(R.string.btn_logout))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

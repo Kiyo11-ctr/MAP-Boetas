@@ -20,8 +20,8 @@ import kotlinx.coroutines.launch
  * default service tasks) via a [RoomDatabase.Callback].
  */
 @Database(
-    entities = [Vehicle::class, ServiceTask::class, Employee::class],
-    version = 1,
+    entities = [Vehicle::class, ServiceTask::class, Employee::class, User::class],
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(GarageConverters::class)
@@ -30,6 +30,7 @@ abstract class GarageDatabase : RoomDatabase() {
     abstract fun vehicleDao(): VehicleDao
     abstract fun serviceTaskDao(): ServiceTaskDao
     abstract fun employeeDao(): EmployeeDao
+    abstract fun userDao(): UserDao
 
     companion object {
         const val DATABASE_NAME = "garage_db"

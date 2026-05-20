@@ -12,7 +12,9 @@ import javax.inject.Inject
 
 data class ServiceUiState(
     val vehiclesWithTasks: List<VehicleWithTasks> = emptyList(),
+    val filteredVehicles: List<VehicleWithTasks> = emptyList(),
     val mechanics: List<Employee> = emptyList(),
+    val searchQuery: String = "",
     val isLoading: Boolean = true,
     val toastMessage: String? = null
 )
@@ -42,15 +44,32 @@ class ServiceViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 vehicleRepository.allVehiclesWithTasks,
-                employeeRepository.activeEmployees
-            ) { vehicles, employees ->
-                ServiceUiState(
-                    vehiclesWithTasks = vehicles.filter { it.vehicle.status != VehicleStatus.COMPLETED },
+                employeeRepository.activeEmployees,
+                _uiState.map { it.searchQuery }.distinctUntilChanged()
+            ) { vehicles, employees, query ->
+                val activeVehicles = vehicles.filter { it.vehicle.status != VehicleStatus.COMPLETED }
+                val filtered = if (query.isBlank()) {
+                    activeVehicles
+                } else {
+                    activeVehicles.filter {
+                        it.vehicle.registrationNumber.contains(query, ignoreCase = true) ||
+                                it.vehicle.makeAndModel.contains(query, ignoreCase = true)
+                    }
+                }
+                Triple(activeVehicles, filtered, employees)
+            }.collect { (active, filtered, employees) ->
+                _uiState.update { it.copy(
+                    vehiclesWithTasks = active,
+                    filteredVehicles = filtered,
                     mechanics = employees.filter { it.role != EmployeeRole.MANAGER },
                     isLoading = false
-                )
-            }.collect { state -> _uiState.value = state }
+                ) }
+            }
         }
+    }
+
+    fun onSearchQueryChanged(query: String) {
+        _uiState.update { it.copy(searchQuery = query) }
     }
 
     /**

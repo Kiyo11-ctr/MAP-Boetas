@@ -14,6 +14,8 @@ import javax.inject.Inject
 data class ReportsUiState(
     val employeeReports: List<EmployeeReport> = emptyList(),
     val vehicleLog: List<VehicleWithTasks> = emptyList(),
+    val filteredVehicleLog: List<VehicleWithTasks> = emptyList(),
+    val vehicleSearchQuery: String = "",
     val isLoading: Boolean = true
 )
 
@@ -34,14 +36,30 @@ class ReportsViewModel @Inject constructor(
         viewModelScope.launch {
             combine(
                 employeeRepository.getEmployeeReports(),
-                vehicleRepository.allVehiclesWithTasks
-            ) { reports, vehicles ->
-                ReportsUiState(
+                vehicleRepository.allVehiclesWithTasks,
+                _uiState.map { it.vehicleSearchQuery }.distinctUntilChanged()
+            ) { reports, vehicles, query ->
+                val filtered = if (query.isBlank()) {
+                    vehicles
+                } else {
+                    vehicles.filter {
+                        it.vehicle.registrationNumber.contains(query, ignoreCase = true) ||
+                                it.vehicle.makeAndModel.contains(query, ignoreCase = true)
+                    }
+                }
+                Triple(reports, vehicles, filtered)
+            }.collect { (reports, vehicles, filtered) ->
+                _uiState.update { it.copy(
                     employeeReports = reports,
                     vehicleLog = vehicles,
+                    filteredVehicleLog = filtered,
                     isLoading = false
-                )
-            }.collect { _uiState.value = it }
+                ) }
+            }
         }
+    }
+
+    fun onVehicleSearchChanged(query: String) {
+        _uiState.update { it.copy(vehicleSearchQuery = query) }
     }
 }
