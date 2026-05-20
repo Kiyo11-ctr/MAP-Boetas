@@ -24,6 +24,10 @@ class EmployeeRepository @Inject constructor(
 
     suspend fun getEmployeeById(id: Int): Employee? = employeeDao.getEmployeeById(id)
 
+    suspend fun addEmployee(employee: Employee) = employeeDao.insertEmployee(employee)
+
+    suspend fun deleteEmployee(employee: Employee) = employeeDao.deleteEmployee(employee)
+
     /**
      * Builds a report list showing each mechanic's task completion for today.
      * Used on the Reports screen — the key accountability feature for Valentine.
