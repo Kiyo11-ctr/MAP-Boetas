@@ -37,23 +37,7 @@ abstract class GarageDatabase : RoomDatabase() {
 
         fun create(context: Context): GarageDatabase =
             Room.databaseBuilder(context, GarageDatabase::class.java, DATABASE_NAME)
-                .addCallback(object : Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                        // Seed default employees on first run
-                        CoroutineScope(Dispatchers.IO).launch {
-                            db.execSQL("""
-                                INSERT INTO employees (fullName, role, isActive) VALUES
-                                ('Valentine Mutorwa', 'MANAGER', 1),
-                                ('Johannes Kavendjii', 'LEAD_MECHANIC', 1),
-                                ('Petrus Nangolo', 'SENIOR_MECHANIC', 1),
-                                ('Maria Shikongo', 'SENIOR_MECHANIC', 1),
-                                ('Festus Haimbodi', 'JUNIOR_MECHANIC', 1),
-                                ('Absalom Tjiueza', 'JUNIOR_MECHANIC', 1)
-                            """)
-                        }
-                    }
-                })
+                .fallbackToDestructiveMigration()
                 .build()
     }
 }
