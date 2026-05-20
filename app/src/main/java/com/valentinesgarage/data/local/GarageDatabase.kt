@@ -58,4 +58,7 @@ class GarageConverters {
 
     @TypeConverter fun roleToString(v: EmployeeRole): String = v.name
     @TypeConverter fun stringToRole(v: String): EmployeeRole = EmployeeRole.valueOf(v)
+
+    @TypeConverter fun userRoleToString(v: UserRole): String = v.name
+    @TypeConverter fun stringToUserRole(v: String): UserRole = UserRole.valueOf(v)
 }

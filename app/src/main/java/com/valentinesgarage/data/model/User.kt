@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 /**
  * User entity for Authentication.
- * Stores login credentials and links to an optional Employee profile.
+ * Stores login credentials and role-based permissions.
  */
 @Entity(tableName = "users")
 data class User(
@@ -13,5 +13,8 @@ data class User(
     val id: Int = 0,
     val email: String,
     val passwordHash: String,
-    val employeeId: Int? = null // Link to the Employee entity if applicable
+    val role: UserRole = UserRole.MECHANIC,
+    val employeeId: Int? = null 
 )
+
+enum class UserRole { ADMIN, RECEPTIONIST, MECHANIC }
