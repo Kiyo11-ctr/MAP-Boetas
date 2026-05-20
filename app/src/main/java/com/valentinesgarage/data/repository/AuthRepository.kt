@@ -2,7 +2,7 @@ package com.valentinesgarage.data.repository
 
 import com.valentinesgarage.data.local.UserDao
 import com.valentinesgarage.data.model.User
-import kotlinx.coroutines.flow.Flow
+import com.valentinesgarage.data.model.UserRole
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.security.MessageDigest
@@ -16,10 +16,10 @@ class AuthRepository @Inject constructor(
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser: StateFlow<User?> = _currentUser
 
-    suspend fun signUp(email: String, password: String): Boolean {
+    suspend fun signUp(email: String, password: String, role: UserRole): Boolean {
         if (userDao.getUserByEmail(email) != null) return false
         val passwordHash = hashPassword(password)
-        val user = User(email = email, passwordHash = passwordHash)
+        val user = User(email = email, passwordHash = passwordHash, role = role)
         userDao.insertUser(user)
         return true
     }
