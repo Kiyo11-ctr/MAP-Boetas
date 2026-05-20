@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinesgarage.data.model.*
+import com.valentinesgarage.data.model.UserRole
 import com.valentinesgarage.ui.auth.AuthViewModel
 import com.valentinesgarage.ui.components.*
 import java.time.LocalDate
@@ -45,7 +46,9 @@ fun DashboardScreen(
             TopAppBar(
                 title = {
                     Column {
-                        Text(stringResource(R.string.title_dashboard), fontWeight = FontWeight.Bold)
+                        val title = if (authViewModel.uiState.collectAsState().value.currentUser?.role == UserRole.RECEPTIONIST) 
+                            "Check-in History" else stringResource(R.string.title_dashboard)
+                        Text(title, fontWeight = FontWeight.Bold)
                         Text(today, fontSize = 12.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 },
