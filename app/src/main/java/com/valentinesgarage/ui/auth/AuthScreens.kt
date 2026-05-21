@@ -73,8 +73,27 @@ fun LoginScreen(
             else Text(stringResource(R.string.btn_login))
         }
 
-        TextButton(onClick = onNavigateToSignUp) {
-            Text(stringResource(R.string.link_goto_signup))
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+            Divider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outlineVariant)
+            Text(
+                text = " OR ",
+                modifier = Modifier.padding(horizontal = 16.dp),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.outline
+            )
+            Divider(modifier = Modifier.weight(1f), color = MaterialTheme.colorScheme.outlineVariant)
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        OutlinedButton(
+            onClick = onNavigateToSignUp,
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !state.isLoading
+        ) {
+            Text(stringResource(R.string.title_signup))
         }
     }
 }
