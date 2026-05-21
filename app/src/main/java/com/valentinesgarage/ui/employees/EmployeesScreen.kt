@@ -22,16 +22,28 @@ import com.valentinesgarage.data.model.EmployeeRole
 import com.valentinesgarage.ui.components.EmptyState
 import com.valentinesgarage.ui.components.LoadingScreen
 
+import com.valentinesgarage.ui.auth.AuthViewModel
+
 /** Employees / roster screen — lists all active mechanics and their roles. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun EmployeesScreen(viewModel: EmployeesViewModel = hiltViewModel()) {
+fun EmployeesScreen(
+    viewModel: EmployeesViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsState()
     var showAddDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.title_employees), fontWeight = FontWeight.Bold) })
+            TopAppBar(
+                title = { Text(stringResource(R.string.title_employees), fontWeight = FontWeight.Bold) },
+                actions = {
+                    IconButton(onClick = authViewModel::logout) {
+                        Icon(Icons.Default.Logout, contentDescription = stringResource(R.string.btn_logout))
+                    }
+                }
+            )
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { showAddDialog = true }) {

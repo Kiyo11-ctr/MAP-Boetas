@@ -19,6 +19,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinesgarage.data.model.*
 import com.valentinesgarage.ui.components.*
 
+import com.valentinesgarage.ui.auth.AuthViewModel
+
 /**
  * Reports screen — restricted to Valentine (manager role).
  *
@@ -31,14 +33,24 @@ import com.valentinesgarage.ui.components.*
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ReportsScreen(viewModel: ReportsViewModel = hiltViewModel()) {
+fun ReportsScreen(
+    viewModel: ReportsViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsState()
     var selectedTab by remember { mutableStateOf(0) }
     val tabs = listOf(stringResource(R.string.tab_employee_activity), stringResource(R.string.tab_vehicle_log))
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.title_reports), fontWeight = FontWeight.Bold) })
+            TopAppBar(
+                title = { Text(stringResource(R.string.title_reports), fontWeight = FontWeight.Bold) },
+                actions = {
+                    IconButton(onClick = authViewModel::logout) {
+                        Icon(Icons.Default.Logout, contentDescription = stringResource(R.string.btn_logout))
+                    }
+                }
+            )
         }
     ) { padding ->
         if (state.isLoading) { LoadingScreen(); return@Scaffold }
