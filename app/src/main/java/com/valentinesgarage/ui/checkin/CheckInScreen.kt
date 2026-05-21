@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valentinesgarage.data.model.*
 
+import com.valentinesgarage.ui.auth.AuthViewModel
+
 /**
  * Truck Check-In screen.
  *
@@ -27,7 +29,10 @@ import com.valentinesgarage.data.model.*
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CheckInScreen(viewModel: CheckInViewModel = hiltViewModel()) {
+fun CheckInScreen(
+    viewModel: CheckInViewModel = hiltViewModel(),
+    authViewModel: AuthViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsState()
 
     // Show success/error snackbars
@@ -48,7 +53,14 @@ fun CheckInScreen(viewModel: CheckInViewModel = hiltViewModel()) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(title = { Text(stringResource(R.string.title_checkin), fontWeight = FontWeight.Bold) })
+            TopAppBar(
+                title = { Text(stringResource(R.string.title_checkin), fontWeight = FontWeight.Bold) },
+                actions = {
+                    IconButton(onClick = authViewModel::logout) {
+                        Icon(Icons.Default.Logout, contentDescription = stringResource(R.string.btn_logout))
+                    }
+                }
+            )
         }
     ) { padding ->
         Column(
