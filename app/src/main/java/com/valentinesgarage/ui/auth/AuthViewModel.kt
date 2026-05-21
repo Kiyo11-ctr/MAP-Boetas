@@ -101,6 +101,7 @@ class AuthViewModel @Inject constructor(
 
     fun logout() {
         authRepository.logout()
+        _uiState.value = AuthUiState()
     }
 
     fun clearError() {
