@@ -1,0 +1,84 @@
+<resources>
+    <string name="app_name">Valentine\'s Garage</string>
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_checkin">Check-In</string>
+    <string name="nav_service">Service</string>
+    <string name="nav_reports">Reports</string>
+    <string name="nav_employees">Employees</string>
+    <string name="label_registration">Registration Number</string>
+    <string name="label_odometer">Odometer (km)</string>
+    <string name="label_condition">Vehicle Condition</string>
+    <string name="hint_condition_notes">Describe visible damage or driver-reported faults...</string>
+    <string name="btn_checkin">Complete Check-In</string>
+    <string name="btn_mark_complete">Mark Complete</string>
+    <string name="error_required_field">This field is required.</string>
+    <string name="error_invalid_odometer">Please enter a valid odometer reading.</string>
+
+    <!-- Service Board -->
+    <string name="title_service_board">Service Board</string>
+    <string name="empty_service_board">No active vehicles. Check in a truck to begin.</string>
+    <string name="btn_add_task">Add Task</string>
+    <string name="label_work_notes">Work Notes</string>
+    <string name="hint_work_notes">Describe what was done, parts used...</string>
+    <string name="label_mechanic">Mechanic *</string>
+    <string name="label_task_description">Task Description *</string>
+    <string name="label_category">Category</string>
+    <string name="dialog_complete_task">Complete Task</string>
+    <string name="dialog_add_custom_task">Add Custom Task</string>
+    <string name="btn_cancel">Cancel</string>
+
+    <!-- Dashboard -->
+    <string name="title_dashboard">Valentine\'s Garage</string>
+    <string name="stat_checked_in">Checked In</string>
+    <string name="stat_in_progress">In Progress</string>
+    <string name="stat_completed">Completed</string>
+    <string name="stat_total">total</string>
+    <string name="stat_active">active</string>
+    <string name="stat_today">today</string>
+    <string name="label_active_vehicles">Active Vehicles</string>
+    <string name="empty_dashboard">No vehicles checked in yet.</string>
+    <string name="label_at_checkin">%1$d km at check-in · Priority: %2$s</string>
+
+    <!-- Check-In -->
+    <string name="title_checkin">Truck Check-In</string>
+    <string name="checkin_info_banner">Odometer and condition are permanently recorded at check-in to prevent disputes and detect vehicle misuse.</string>
+    <string name="section_vehicle_details">Vehicle Details</string>
+    <string name="hint_registration">e.g. N 1234 WH</string>
+    <string name="hint_make_model">e.g. Scania R500</string>
+    <string name="label_driver_name">Driver Name</string>
+    <string name="section_condition">Vehicle Condition *</string>
+    <string name="section_assignment">Assignment</string>
+    <string name="label_assign_mechanic">Assign Lead Mechanic *</string>
+    <string name="label_priority">Priority</string>
+
+    <!-- Reports -->
+    <string name="title_reports">Reports</string>
+    <string name="tab_employee_activity">Employee Activity</string>
+    <string name="tab_vehicle_log">Vehicle Log</string>
+    <string name="empty_reports_employee">No employee data yet.</string>
+    <string name="empty_reports_vehicle">No vehicles in the log yet.</string>
+    <string name="label_tasks_completed">%1$d tasks completed</string>
+    <string name="label_vehicles_worked">%1$d vehicles</string>
+    <string name="label_checkin_km">Check-In KM</string>
+    <string name="label_status">Status</string>
+
+    <!-- Employees -->
+    <string name="title_employees">Employees</string>
+    <string name="label_active">Active</string>
+
+    <!-- Auth -->
+    <string name="title_login">Login</string>
+    <string name="title_signup">Sign Up</string>
+    <string name="label_email">Email Address</string>
+    <string name="label_password">Password</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_signup">Sign Up</string>
+    <string name="link_goto_signup">Don\'t have an account? Sign Up</string>
+    <string name="link_goto_login">Already have an account? Login</string>
+    <string name="error_invalid_email">Please enter a valid email.</string>
+    <string name="error_short_password">Password must be at least 6 characters.</string>
+    <string name="error_auth_failed">Invalid email or password.</string>
+    <string name="error_email_exists">Email already registered.</string>
+    <string name="msg_signup_success">Account created successfully!</string>
+    <string name="btn_logout">Logout</string>
+</resources>
